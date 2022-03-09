@@ -47,11 +47,17 @@ void updateTuningValues() {
   lcd.setFreeFont(&FreeSansBold9pt7b);
   lcd.setTextSize(1);
   lcd.setCursor(0, 15);
-  lcd.print(getKp());
-  lcd.print(' ');
-  lcd.print(getKi());
-  lcd.print(' ');
-  lcd.print(getKd());
+  lcd.print(getOutput(), 0);
+  lcd.print("/");
+  lcd.print(getSpan(), 0);
+  lcd.print(" (");
+  lcd.print((getOutput() / getSpan()) * 100, 0);
+  lcd.print("%)");
+  // lcd.print(getKp());
+  // lcd.print(' ');
+  // lcd.print(getKi());
+  // lcd.print(' ');
+  // lcd.print(getKd());
 }
 
 void updateStateIndicator() {
@@ -113,7 +119,7 @@ void handleDisplay() {
     updateDisplay();
     updatePowerIndicator();
     if (tuning) {
-      // updateTuningValues();
+      updateTuningValues();
     }
     previousMillis = currentMillis;
   }

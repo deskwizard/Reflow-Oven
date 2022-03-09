@@ -86,17 +86,17 @@ void reactKeys(uint8_t key, uint8_t state) {
     }
   }
 
-  if (key == 6) {
-    // Serial.print(F("begel"));
-    if (state == PRESSED) {
-      // Next digit adjust
-      if (adjustStep == 100) {
-        adjustStep = 1;
-      } else {
-        adjustStep = adjustStep * 10;
-      }
-    }
-  }
+  // if (key == 6) {
+  //   // Serial.print(F("begel"));
+  //   if (state == PRESSED) {
+  //     // Next digit adjust
+  //     if (adjustStep == 100) {
+  //       adjustStep = 1;
+  //     } else {
+  //       adjustStep = adjustStep * 10;
+  //     }
+  //   }
+  // }
 
   if (key == 7) {
     // Serial.print(F("begel"));

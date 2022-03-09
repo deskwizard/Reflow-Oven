@@ -22,11 +22,11 @@ const float outputSpan = 255.0;
 // user settings
 uint32_t settleTimeSec = 10;
 uint32_t testTimeSec = 500; // runPid interval = testTimeSec / samples
-const uint16_t samples = 500;
+const uint16_t samples = 2000;
 const float inputSpan = 200.0;
 
 float outputStart = 0.0;
-float outputStep = 127.0; // Portion of output span
+float outputStep = 192.0; // Portion of output span
 float tempLimit = 80.0;
 uint8_t debounce = 1;
 
@@ -35,13 +35,17 @@ float Input;
 float Kp, Ki, Kd;
 
 sTune tuner =
-    sTune(&Input, &outputValue, tuner.ZN_PID, tuner.directIP, tuner.printOFF);
+    sTune(&Input, &outputValue, tuner.ZN_PID, tuner.directIP, tuner.printSUMMARY);
 QuickPID myPID(&Input, &outputValue, &setpointHigh);
 
 float getOutputValue() { return outputValue; }
 float getKp() { return Kp; }
 float getKi() { return Ki; }
 float getKd() { return Kd; }
+float getOutput() { return outputValue; }
+float getSpan() { return outputSpan; }
+
+
 
 void initPIDsTune() {
 

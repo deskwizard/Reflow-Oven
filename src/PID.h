@@ -12,6 +12,8 @@ float getOutputValue();
 float getKp();
 float getKi();
 float getKd();
+float getOutput();
+float getSpan();
 void printValues();
 void printValuesBT();
 
