@@ -11,4 +11,7 @@ float readTempC();
 int16_t readSensorValue();
 void handleSensor();
 
+void printTempSerial(float tempC);
+void printTempSerialBT(float tempC);
+
 #endif

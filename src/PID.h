@@ -12,5 +12,7 @@ float getOutputValue();
 float getKp();
 float getKi();
 float getKd();
+void printValues();
+void printValuesBT();
 
 #endif

@@ -284,6 +284,22 @@ void printKeyDebug(uint8_t key, uint8_t state) {
   }
 }
 
+void printKeyDebugBT(uint8_t key, uint8_t state) {
+#ifdef BT_SERIAL_ENABLED
+  // Serial debug for keys
+  SerialBT.print("Key ");
+  SerialBT.print(key);
+
+  if (state == PRESSED) {
+    SerialBT.println(" was Pressed");
+  } else if (state == RELEASED) {
+    SerialBT.println(" was Released");
+  } else {
+    SerialBT.println("Woops, something went wrong");
+  }
+#endif
+}
+
 void IRAM_ATTR onTimer() {
   portENTER_CRITICAL_ISR(&timerMux);
   getKeys();

@@ -52,9 +52,14 @@ void initPIDsTune() {
 }
 
 void toggleTuning() {
-  Serial.print(F("tuning: "));
+
   tuning = !tuning;
+  Serial.print("tuning: ");
   Serial.print(tuning);
+#ifdef BT_SERIAL_ENABLED
+  SerialBT.print("tuning: ");
+  SerialBT.print(tuning);
+#endif
 
   outputValue = 0;
 
@@ -81,28 +86,8 @@ void handlePIDsTune() {
     // outputValue scale 0.5, plot every 3rd sample <== why??
     // tuner.plotter(Input, outputValue, setpointHigh, 0.5f, 3);
 
-    Serial.print("Temp: ");
-    Serial.print(_ewma);
-    Serial.print("°C  (");
-    Serial.print(CtoF(_ewma));
-    Serial.print("°F)");
-
-    Serial.print("  SP: ");
-    Serial.print(setpointHigh);
-    Serial.print("°C");
-
-    Serial.print("  OutVal: ");
-    Serial.print(outputValue, 0);
-    Serial.print("/255 (");
-    Serial.print((outputValue / outputSpan) * 100.0);
-    Serial.print("%)  ");
-    // Serial.print("Kp: ");
-    // Serial.print(Kp, 4);
-    // Serial.print("  Ki: ");
-    // Serial.print(Ki, 4);
-    // Serial.print("  Kd: ");
-    // Serial.print(Kd, 4);
-    Serial.println();
+    printValues();
+    printValuesBT();
     break;
 
   case tuner.tunings:                    // active just once when sTune is done
@@ -123,4 +108,54 @@ void handlePIDsTune() {
     tuner.plotter(Input, optimumOutput, setpointHigh, 0.5f, 3);
     break;
   }
+}
+
+void printValues() {
+  Serial.print("Temp: ");
+  Serial.print(_ewma);
+  Serial.print("°C  (");
+  Serial.print(CtoF(_ewma));
+  Serial.print("°F)");
+
+  Serial.print("  SP: ");
+  Serial.print(setpointHigh);
+  Serial.print("°C");
+
+  Serial.print("  OutVal: ");
+  Serial.print(outputValue, 0);
+  Serial.print("/255 (");
+  Serial.print((outputValue / outputSpan) * 100.0);
+  Serial.print("%)  ");
+  // Serial.print("Kp: ");
+  // Serial.print(Kp, 4);
+  // Serial.print("  Ki: ");
+  // Serial.print(Ki, 4);
+  // Serial.print("  Kd: ");
+  // Serial.print(Kd, 4);
+  Serial.println();
+}
+
+void printValuesBT() {
+#ifdef BT_SERIAL_ENABLED
+  SerialBT.print("Temp: ");
+  SerialBT.print(_ewma);
+  SerialBT.print("°C  (");
+  SerialBT.print(CtoF(_ewma));
+  SerialBT.print("°F)");
+  SerialBT.print("  SP: ");
+  SerialBT.print(setpointHigh);
+  SerialBT.print("°C");
+  SerialBT.print("  OutVal: ");
+  SerialBT.print(outputValue, 0);
+  SerialBT.print("/255 (");
+  SerialBT.print((outputValue / outputSpan) * 100.0);
+  SerialBT.print("%)  ");
+  // SerialBT.print("Kp: ");
+  // SerialBT.print(Kp, 4);
+  // SerialBT.print("  Ki: ");
+  // SerialBT.print(Ki, 4);
+  // SerialBT.print("  Kd: ");
+  // SerialBT.print(Kd, 4);
+  SerialBT.println();
+#endif
 }

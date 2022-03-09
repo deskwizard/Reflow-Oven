@@ -3,6 +3,13 @@
 
 #include <Arduino.h>
 
+#define BT_SERIAL_ENABLED
+
+#ifdef BT_SERIAL_ENABLED
+#include "BluetoothSerial.h"
+extern BluetoothSerial SerialBT;
+#endif 
+
 #define OFF false
 #define ON true
 #define UNIT_C true

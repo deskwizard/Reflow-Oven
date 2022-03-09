@@ -50,23 +50,46 @@ void handleSensor() {
 
     // Check if reading was successful
     if (tempC != MAX6675_INVALID) {
-      if (!tuning) {
-        Serial.print("R : ");
-        Serial.print(tempC);
-        Serial.print("°C  (");
-        Serial.print(_ewma);
-        Serial.print("°C)   ");
-        Serial.print(CtoF(tempC));
-        Serial.print("°F  (");
-        Serial.print(CtoF(_ewma));
-        Serial.print("°F)   ");
-        Serial.println();
-      }
-
+      printTempSerial(tempC);
+      printTempSerialBT(tempC);
     } else {
       Serial.println("Error: Could not read temperature data");
       // Call e-stop here
     }
     previousMillis = currentMillis;
   }
+}
+
+void printTempSerial(float tempC) {
+
+  if (!tuning) {
+
+    //Serial.print("R : ");
+    Serial.print(tempC);
+    Serial.print("°C  (");
+    Serial.print(_ewma);
+    Serial.print("°C)   ");
+    Serial.print(CtoF(tempC));
+    Serial.print("°F  (");
+    Serial.print(CtoF(_ewma));
+    Serial.print("°F)   ");
+    Serial.println();
+  }
+}
+
+void printTempSerialBT(float tempC) {
+#ifdef BT_SERIAL_ENABLED
+  if (!tuning) {
+    SerialBT.print("R : ");
+    SerialBT.print(tempC);
+    SerialBT.print("°C  (");
+    SerialBT.print(_ewma);
+    SerialBT.print("°C)   ");
+    SerialBT.print(CtoF(tempC));
+    SerialBT.print("°F  (");
+    SerialBT.print(CtoF(_ewma));
+    SerialBT.print("°F)   ");
+    SerialBT.println();
+  }
+#endif
 }
