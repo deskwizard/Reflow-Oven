@@ -1,7 +1,5 @@
 #include "control.h"
-#include "defines.h"
 #include "display.h"
-#include <Arduino.h>
 
 extern double _ewma;
 /***************************************************************************

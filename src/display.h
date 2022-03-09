@@ -1,7 +1,9 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
-#include <stdint.h>
+#include "defines.h"
+#include <SPI.h>
+#include <TFT_eSPI.h>
 
 //#define VP_DEBUG
 

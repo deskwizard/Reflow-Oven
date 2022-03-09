@@ -1,7 +1,7 @@
 #ifndef _CONTROL_H_
 #define _CONTROL_H_
 
-#include <stdint.h>
+#include "defines.h"
 
 // #define MODE_IDLE 0
 // #define MODE_RUN 1

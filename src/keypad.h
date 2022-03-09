@@ -1,7 +1,7 @@
 #ifndef _KEYPAD_H_
 #define _KEYPAD_H_
 
-#include <stdint.h>
+#include "defines.h"
 
 #define PRESSED 1
 #define RELEASED 0

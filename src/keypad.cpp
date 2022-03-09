@@ -1,9 +1,7 @@
 #include "keypad.h"
 #include "PID.h"
 #include "control.h"
-#include "defines.h"
 #include "display.h"
-#include <Arduino.h>
 
 uint8_t adjustStep = 1; // 1, 10, 100
 

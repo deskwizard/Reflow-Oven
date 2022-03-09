@@ -3,7 +3,6 @@
 #include "keypad.h"
 #include "PID.h"
 #include "control.h"
-#include <Arduino.h>
 
 float CtoF(float celsius) { return (celsius * 1.8f) + 32.0f; }
 

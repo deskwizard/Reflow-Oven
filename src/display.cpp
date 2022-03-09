@@ -1,11 +1,6 @@
 #include "display.h"
 #include "PID.h"
 #include "control.h"
-#include "defines.h"
-#include <Arduino.h>
-#include <SPI.h>
-
-#include <TFT_eSPI.h>
 
 TFT_eSPI lcd = TFT_eSPI();
 

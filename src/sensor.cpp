@@ -1,7 +1,4 @@
 #include "sensor.h"
-#include "defines.h"
-#include <Arduino.h>
-#include <SPI.h>
 
 const uint16_t sensorReadRate = 300; // --MINIMUM-- is 250ms
 

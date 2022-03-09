@@ -1,6 +1,4 @@
 #include "control.h"
-#include "defines.h"
-#include <Arduino.h>
 
 // float setpointLow = 20.0;
 float setpointHigh = 40.0;

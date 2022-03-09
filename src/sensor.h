@@ -1,7 +1,8 @@
 #ifndef _SENSOR_H
 #define _SENSOR_H
 
-#include <stdint.h>
+#include "defines.h"
+#include <SPI.h>
 
 #define MAX6675_INVALID -1.0
 
