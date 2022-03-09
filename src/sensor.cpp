@@ -21,7 +21,7 @@ float readTempC() {
 
 int16_t readSensorValue() {
 
-  SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE1));
+  SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
   digitalWrite(MAX6675_CS, LOW);
   uint16_t data = SPI.transfer16(0x00);
   digitalWrite(MAX6675_CS, HIGH);
@@ -30,8 +30,7 @@ int16_t readSensorValue() {
   if (data & 0x04) // Thermocouple present bit
     return -1;     // -1 is invalid (sensor starts at 0°C)
 
-  // return (data >> 3); // Return bits
-  return (data >> 4); // Return bits
+  return (data >> 3); // Return bits
 }
 
 void handleSensor() {

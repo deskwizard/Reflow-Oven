@@ -6,8 +6,6 @@ Todo list (mandatory):
 
             -   Option B: Not caring.
 
-    -   Figure out why the MAX6675 is off by a bit on ESP32
-
     -   Keypad debouncing
             - Would modifying the usual debounce code for 16 bits work
               with the matrix?
