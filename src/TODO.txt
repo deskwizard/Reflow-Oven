@@ -1,0 +1,32 @@
+Todo list (mandatory):
+
+    -   Fan pin high on boot (Boot pin ?)
+            -   Option A: Use it for HOTA or HOTB instead since it won't do anything
+                          without the SSR activated.
+
+            -   Option B: Not caring.
+
+    -   Figure out why the MAX6675 is off by a bit on ESP32
+
+    -   Keypad debouncing
+            - Would modifying the usual debounce code for 16 bits work
+              with the matrix?
+
+    -   PID
+
+    -   Cooldown time control
+
+
+
+Todo list (might as well):
+
+    -   Smooth fonts
+
+    -   Icons (fan, little heating waves, etc...)
+
+
+Optional ideas:
+    -   OTA
+    -   BT debug printing
+    -   Value control over serial/bt for testing
+    

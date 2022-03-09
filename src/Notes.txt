@@ -1,0 +1,5 @@
+-   SSR on main input of control board (yeah, the fan...*slow clap*)
+
+-   Control board:
+    -   Fan relay removed
+    -   Fan master enable bypassed
