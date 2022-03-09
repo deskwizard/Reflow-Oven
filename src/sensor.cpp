@@ -56,14 +56,13 @@ void handleSensor() {
         Serial.print("°C  (");
         Serial.print(_ewma);
         Serial.print("°C)   ");
+        Serial.print(CtoF(tempC));
+        Serial.print("°F  (");
+        Serial.print(CtoF(_ewma));
+        Serial.print("°F)   ");
+        Serial.println();
       }
 
-      Serial.print(CtoF(tempC));
-      Serial.print("°F  (");
-      Serial.print(CtoF(_ewma));
-      Serial.print("°F)   ");
-
-      Serial.println();
     } else {
       Serial.println("Error: Could not read temperature data");
       // Call e-stop here

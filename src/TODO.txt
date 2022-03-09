@@ -10,7 +10,7 @@ Todo list (mandatory):
             - Would modifying the usual debounce code for 16 bits work
               with the matrix?
 
-    -   PID
+    -   PID (PWM doesn't use analogWrite on ESP32, use PWM peripheral)
 
     -   Cooldown time control
 
@@ -21,6 +21,9 @@ Todo list (might as well):
     -   Smooth fonts
 
     -   Icons (fan, little heating waves, etc...)
+
+    -   Re-wire & replace the buzzer on the control board for
+        a 12V model instead of 5V 
 
 
 Optional ideas:

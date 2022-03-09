@@ -96,12 +96,12 @@ void handlePIDsTune() {
     Serial.print("/255 (");
     Serial.print((outputValue / outputSpan) * 100.0);
     Serial.print("%)  ");
-    Serial.print("Kp: ");
-    Serial.print(Kp, 4);
-    Serial.print("  Ki: ");
-    Serial.print(Ki, 4);
-    Serial.print("  Kd: ");
-    Serial.print(Kd, 4);
+    // Serial.print("Kp: ");
+    // Serial.print(Kp, 4);
+    // Serial.print("  Ki: ");
+    // Serial.print(Ki, 4);
+    // Serial.print("  Kd: ");
+    // Serial.print(Kd, 4);
     Serial.println();
     break;
 

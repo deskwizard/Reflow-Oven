@@ -1,6 +1,8 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
+#include "PID.h"
+#include "control.h"
 #include "defines.h"
 #include <SPI.h>
 #include <TFT_eSPI.h>

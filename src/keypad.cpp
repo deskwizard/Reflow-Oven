@@ -1,7 +1,7 @@
 #include "keypad.h"
-#include "PID.h"
-#include "control.h"
-#include "display.h"
+// #include "PID.h"
+// #include "control.h"
+// #include "display.h"
 
 uint8_t adjustStep = 1; // 1, 10, 100
 

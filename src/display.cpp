@@ -1,6 +1,4 @@
 #include "display.h"
-#include "PID.h"
-#include "control.h"
 
 TFT_eSPI lcd = TFT_eSPI();
 
