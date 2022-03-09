@@ -260,7 +260,7 @@ void getKeys() {
     digitalWrite(PIN_COL1, HIGH);
     for (uint8_t x = 0; x < ROWS_COUNT; x++) {
       pinRead = digitalRead(rowPins[x]);
-      bitWrite(allKeys, x + 8, pinRead);
+      bitWrite(allKeys, x + 7, pinRead);
       // Serial.print(pinRead);
       // Serial.print(" ");
     }
