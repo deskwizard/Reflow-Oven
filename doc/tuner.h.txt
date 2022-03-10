@@ -1,5 +1,5 @@
-#ifndef _PID_H_
-#define _PID_H_
+#ifndef _STUNER_H_
+#define _STUNER_H
 
 #include "defines.h"
 
@@ -12,7 +12,6 @@ float getOutputValue();
 float getKp();
 float getKi();
 float getKd();
-float getOutput();
 float getSpan();
 void printValues();
 void printValuesBT();

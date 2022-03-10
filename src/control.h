@@ -14,9 +14,4 @@ void setBuzzer(bool state);
 void setFan(bool state);
 void toggleFan();
 
-void initSensor();
-void handleSensor();
-float readTempC();
-int16_t readSensorValue();
-
 #endif

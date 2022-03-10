@@ -2,14 +2,15 @@
 
 TFT_eSPI lcd = TFT_eSPI();
 
-extern double _ewma;
-extern float setpointLow;
+extern float _ewma;
+// extern double setpointLow;
 extern float setpointHigh;
-extern bool tuning;
 
 bool displayUnit = UNIT_C;
 
 uint16_t displayReadRate = 1000;
+
+extern uint8_t deviceMode;
 
 void initDisplay() {
 
@@ -41,18 +42,20 @@ void initDisplay() {
   updateStateIndicator();
 }
 
-void updateTuningValues() {
+void updatePIDValues() {
   lcd.setViewport(0, 116, DISPLAY_W, 21);
   lcd.fillScreen(TUNE_VAL_FILL);
-  lcd.setFreeFont(&FreeSansBold9pt7b);
+  lcd.setFreeFont(&FreeSans9pt7b);
   lcd.setTextSize(1);
   lcd.setCursor(0, 15);
-  lcd.print(getOutput(), 0);
+
+  lcd.print(getOutputValue(), 0);
   lcd.print("/");
   lcd.print(getSpan(), 0);
   lcd.print(" (");
-  lcd.print((getOutput() / getSpan()) * 100, 0);
+  lcd.print((getOutputValue() / getSpan()) * 100, 0);
   lcd.print("%)");
+
   // lcd.print(getKp());
   // lcd.print(' ');
   // lcd.print(getKi());
@@ -68,17 +71,28 @@ void updateStateIndicator() {
   lcd.setTextSize(1);
   lcd.setTextDatum(CC_DATUM);
 
-  if (tuning) {
+  if (deviceMode == MODE_PID_RUNNING) {
+    lcd.setTextColor(TFT_BLUE);
+    lcd.drawString("Running", DISPLAY_W / 2, 10);
+    updatePIDValues();
+  } else if (deviceMode == MODE_PID_PREHEAT) {
     lcd.setTextColor(TFT_ORANGE);
-    lcd.drawString("Tuning", DISPLAY_W / 2, 10);
-    updateTuningValues();
-  } else {
+    lcd.drawString("Preheat", DISPLAY_W / 2, 10);
+    updatePIDValues();
+  }
+  else if (deviceMode == MODE_PID_DWELL) {
+    lcd.setTextColor(TFT_YELLOW);
+    lcd.drawString("Dwell", DISPLAY_W / 2, 10);
+  }
+
+  else {
     lcd.drawString("Ready", DISPLAY_W / 2, 10);
 
     // Wipe the tuning values viewport
     lcd.setViewport(0, 116, DISPLAY_W, 21);
     lcd.fillScreen(TUNE_VAL_FILL);
   }
+
   /*
     // Setpoint display
   lcd.setViewport(111, SP_VP_Y, 27, SP_H);
@@ -102,8 +116,8 @@ void updatePowerIndicator() {
 
   lcd.drawLine(0, IND_PWR_H, DISPLAY_W, 0, TFT_GREEN);
 
-  uint8_t width = uint8_t((getOutputValue() / 255.0) * DISPLAY_W);
-  uint8_t heigth = uint8_t((getOutputValue() / 255.0) * IND_PWR_H);
+  uint8_t width = uint8_t((getOutputValue() / MAX_DUTY_CYCLE) * DISPLAY_W);
+  uint8_t heigth = uint8_t((getOutputValue() / MAX_DUTY_CYCLE) * IND_PWR_H);
 
   // Has a tiny glitch on the leftmost row when at 0... it'll wait.
   lcd.fillTriangle(0, IND_PWR_H, width, IND_PWR_H, width, IND_PWR_H - heigth,
@@ -118,8 +132,23 @@ void handleDisplay() {
   if ((uint32_t)(currentMillis - previousMillis) >= displayReadRate) {
     updateDisplay();
     updatePowerIndicator();
-    if (tuning) {
-      updateTuningValues();
+    if (deviceMode == MODE_PID_RUNNING) {
+      updatePIDValues();
+
+      // // Just testing it here
+
+      // Serial.print(_ewma);
+      // Serial.print("°C  (");
+      // Serial.print(CtoF(_ewma));
+      // Serial.print("°F)");
+
+      // Serial.print("  -  ");
+      // Serial.print(getOutputValue(), 0);
+      // Serial.print("/");
+      // Serial.print(getSpan(), 0);
+      // Serial.print(" (");
+      // Serial.print((getOutputValue() / getSpan()) * 100, 0);
+      // Serial.print("%)");
     }
     previousMillis = currentMillis;
   }
@@ -133,7 +162,7 @@ void updateSetpointDisplay() {
   if (displayUnit == UNIT_F) {
     displayValue = CtoF(setpointHigh);
   }
-  lcd.setFreeFont(&FreeSansBold12pt7b);
+  lcd.setFreeFont(&FreeSans12pt7b);
   lcd.setTextSize(1);
 
   // we can move that to another viewport so we don't redraw needlessly
@@ -159,7 +188,13 @@ void updateDisplay() {
   lcd.setFreeFont(&FreeSansBold18pt7b);
   lcd.setTextSize(2);
   lcd.setTextDatum(CR_DATUM);
-  lcd.drawNumber(displayValue, TVAL_W, 28, GFXFF);
+
+  // Serial.print("Wtf: ");
+  // Serial.print(displayValue);
+  // Serial.print("  ");
+  // Serial.println(_ewma);
+
+  lcd.drawFloat(displayValue, 0, TVAL_W, 28, GFXFF);
 }
 
 void toggleDisplayUnit() {
@@ -170,12 +205,12 @@ void toggleDisplayUnit() {
   updateSetpointDisplay();
 }
 
-void updateTuningText() {
-  if (tuning) {
+// void updateTuningText() {
+//   // if (tuning) {
 
-  } else {
-  }
-}
+//   // } else {
+//   // }
+// }
 
 void updateUnitDisplay() {
 
@@ -195,7 +230,7 @@ void updateUnitDisplay() {
   // Setpoint display
   lcd.setViewport(81, SP_VP_Y, 27, SP_H);
   lcd.fillScreen(SP_UNIT_FILL);
-  lcd.setFreeFont(&FreeSansBold9pt7b);
+  lcd.setFreeFont(&FreeSans9pt7b);
   lcd.setTextSize(1);
   lcd.setTextDatum(TR_DATUM);
   if (displayUnit == UNIT_C) {

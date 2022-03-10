@@ -1,8 +1,9 @@
-#include "PID.h"
 #include "control.h"
 #include "defines.h"
 #include "display.h"
 #include "keypad.h"
+#include "mypid.h"
+#include "sensor.h"
 
 #ifdef OTA_ENABLED
 #include "credentials.h"
@@ -17,6 +18,8 @@ void handleOTA();
 #ifdef BT_SERIAL_ENABLED
 BluetoothSerial SerialBT;
 #endif
+
+void printSerialHelp();
 
 float CtoF(float celsius) { return (celsius * 1.8f) + 32.0f; }
 
@@ -36,14 +39,90 @@ void setup() {
   initOutputs();
   initSensor();
   initKeypad();
+  initPID();
 }
 
 void loop() {
   handleDisplay();
   handleKeypad();
   handleSensor();
-  handlePIDsTune();
+  handlePID();
   handleOTA();
+
+  if (Serial.available()) {
+
+    unsigned char c = Serial.read();
+    float readValueF;
+    uint16_t readValueC;
+
+    switch (c) {
+
+    case 'p':
+      readValueF = Serial.parseFloat();
+      setKp(readValueF);
+      break;
+    case 'i':
+      readValueF = Serial.parseFloat();
+      setKi(readValueF);
+      break;
+    case 'd':
+      readValueF = Serial.parseFloat();
+      setKd(readValueF);
+      break;
+
+    case 'P':
+      Serial.print("Kp: ");
+      Serial.println(getKp(), 4);
+      break;
+    case 'I':
+      Serial.print("Ki: ");
+      Serial.println(getKi(), 4);
+      break;
+    case 'D':
+      Serial.print("Kd: ");
+      Serial.println(getKd(), 4);
+      break;
+
+    case 'q':
+      readValueC = Serial.parseInt();
+      setDwellTime(readValueC);
+      break;
+
+    case 'c':
+      readValueC = Serial.parseInt();
+      setPreheatDutyCycle(readValueC);
+      break;
+    case 'v':
+      readValueC = Serial.parseInt();
+      setPreheatTime(readValueC);
+      break;
+    case 'w':
+      readValueC = Serial.parseInt();
+      setDwellTime(readValueC);
+      break;
+    case 'h':
+      printSerialHelp();
+      break;
+    }
+  }
+}
+
+void printSerialHelp() {
+  Serial.println("  Command            Action");
+  Serial.println("---------------------------------------------");
+  Serial.println("  w(int)             Set dwell time");
+  Serial.println("  v(int)             Set preheat time");
+  Serial.println("  c(int)             Set preheat duty cycle");
+  Serial.println();
+  Serial.println("  P                  Print Kp value");
+  Serial.println("  I                  Print Ki value");
+  Serial.println("  D                  Print Kd value");
+  Serial.println();
+  Serial.println("  p(float)           Set Kp");
+  Serial.println("  i(float)           Set Ki");
+  Serial.println("  d(float)           Set Kd");
+  Serial.println("---------------------------------------------");
+  Serial.println();
 }
 
 void initOTA() {

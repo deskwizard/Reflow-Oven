@@ -1,4 +1,8 @@
+* = WIP / Partial implementation
+
 Todo list (mandatory):
+    -   Figure out why the serial PID setting doesn't work
+        but works in the PID loop.
 
     -   Fan pin high on boot (Boot pin ?)
             -   Option A: Use it for HOTA or HOTB instead since it won't do anything
@@ -10,7 +14,7 @@ Todo list (mandatory):
             - Would modifying the usual debounce code for 16 bits work
               with the matrix?
 
-    -   PID (PWM doesn't use analogWrite on ESP32, use PWM peripheral)
+    -   PID
 
     -   Cooldown time control
 

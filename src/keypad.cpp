@@ -5,9 +5,9 @@
 
 uint8_t adjustStep = 1; // 1, 10, 100
 
-extern float setpointLow;
-extern float setpointHigh;
-extern bool tuning;
+extern double setpointLow;
+extern double setpointHigh;
+extern uint8_t deviceMode;
 extern bool displayUnit;
 
 // Connect to the rows and columns pins of the kpd
@@ -74,7 +74,14 @@ void reactKeys(uint8_t key, uint8_t state) {
 
   if (key == 1) {
     if (state == PRESSED) {
-      toggleTuning();
+     
+     if (deviceMode == MODE_IDLE) {
+       startPID();
+     }
+     else {
+       stopPID();
+       deviceMode = MODE_IDLE;
+     }
     }
   }
 

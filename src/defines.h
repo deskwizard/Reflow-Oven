@@ -16,6 +16,11 @@ extern BluetoothSerial SerialBT;
 #define UNIT_C true
 #define UNIT_F false
 
+#define MODE_IDLE 0
+#define MODE_PID_DWELL 7
+#define MODE_PID_PREHEAT 8 
+#define MODE_PID_RUNNING 9
+
 /********************** Output Pins **********************/
 
 // LCD pins (configured in lib/TFT_eSPI/User_Setup.h)

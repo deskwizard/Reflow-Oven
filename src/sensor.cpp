@@ -1,12 +1,10 @@
 #include "sensor.h"
-
+extern bool running;
 const uint16_t sensorReadRate = 300; // --MINIMUM-- is 250ms
 
 // https://makeabilitylab.github.io/physcomp/advancedio/smoothing-input.html#arduino-ewma-implementation
 float _ewmaAlpha = 0.1; // the EWMA alpha value (α)
-double _ewma = 0;       // the EWMA result (Si), initialized to zero
-
-extern bool tuning;
+float _ewma = 0.0;      // the EWMA result (Si), initialized to zero
 
 void initSensor() {
   pinMode(MAX6675_CS, OUTPUT);
@@ -44,14 +42,16 @@ void handleSensor() {
 
     float tempC = float(readSensorValue() * 0.25);
 
-    // Apply the EWMA formula
-    _ewma = (_ewmaAlpha * float(readSensorValue() * 0.25)) +
-            (1.0 - _ewmaAlpha) * _ewma;
+    // // Apply the EWMA formula
+    // _ewma = (_ewmaAlpha * float(readSensorValue() * 0.25)) +
+    //         (1.0 - _ewmaAlpha) * _ewma;
 
     // Check if reading was successful
     if (tempC != MAX6675_INVALID) {
-      printTempSerial(tempC);
-      printTempSerialBT(tempC);
+      // Apply the EWMA formula
+      _ewma = (_ewmaAlpha * tempC) + (1.0 - _ewmaAlpha) * _ewma;
+      // printTempSerial(tempC);
+      // printTempSerialBT(tempC);
     } else {
       Serial.println("Error: Could not read temperature data");
       // Call e-stop here
@@ -61,20 +61,37 @@ void handleSensor() {
 }
 
 void printTempSerial(float tempC) {
-
-  if (!tuning) {
-
-    //Serial.print("R : ");
+  if (!running) {
     Serial.print(tempC);
     Serial.print("°C  (");
-    Serial.print(_ewma);
-    Serial.print("°C)   ");
-    Serial.print(CtoF(tempC));
-    Serial.print("°F  (");
     Serial.print(CtoF(_ewma));
-    Serial.print("°F)   ");
-    Serial.println();
+    Serial.print("°F)");
   }
+  // if (running) {
+  //   Serial.print("  -  ");
+  //   Serial.print(getOutputValue(), 0);
+  //   Serial.print("/");
+  //   Serial.print(getSpan(), 0);
+  //   Serial.print(" (");
+  //   Serial.print((getOutputValue() / getSpan()) * 100, 0);
+  //   Serial.print("%)");
+  // }
+
+  Serial.println();
+
+  // if (!tuning) {
+
+  // Serial.print("R : ");
+  //  Serial.print(tempC);
+  //  Serial.print("°C  (");
+  //  Serial.print(_ewma);
+  //  Serial.print("°C)   ");
+  //  Serial.print(CtoF(tempC));
+  //  Serial.print("°F  (");
+  //  Serial.print(CtoF(_ewma));
+  //  Serial.print("°F)   ");
+  //  Serial.println();
+  //}
 }
 
 void printTempSerialBT(float tempC) {
