@@ -1,7 +1,7 @@
 #include "mypid.h"
 
 extern float _ewma;
-extern float setpointHigh;
+float setpointHigh = 40.0;
 
 float outputValue = 0.0;
 // const float outputSpan = MAX_DUTY_CYCLE;

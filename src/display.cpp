@@ -141,7 +141,7 @@ void handleDisplay() {
 
 void updateSetpointDisplay() {
   float displayValue = setpointHigh;
-  lcd.setViewport(0, SP_VP_Y, 80, SP_H);
+  lcd.setViewport(0, SP_VP_Y, SP_VP_W, SP_H);
   lcd.fillScreen(SPVAL_FILL);
 
   if (displayUnit == UNIT_F) {
@@ -150,12 +150,8 @@ void updateSetpointDisplay() {
   lcd.setFreeFont(&FreeSans12pt7b);
   lcd.setTextSize(1);
 
-  // we can move that to another viewport so we don't redraw needlessly
-  lcd.setTextDatum(CL_DATUM);
-  lcd.drawString("SP: ", 0, 12, GFXFF);
-
   lcd.setTextDatum(CR_DATUM);
-  lcd.drawNumber(uint16_t(displayValue), 80, 12, GFXFF);
+  lcd.drawNumber(uint16_t(displayValue), SP_VP_W, 12, GFXFF);
 }
 
 void updateDisplay() {
@@ -211,7 +207,7 @@ lcd.setTextColor(TFT_GREEN);
   }
 
   // Setpoint display
-  lcd.setViewport(81, SP_VP_Y, 27, SP_H);
+  lcd.setViewport(SP_VP_W, SP_VP_Y, 18, SP_H);
   lcd.fillScreen(SP_UNIT_FILL);
   lcd.setFreeFont(&FreeSans9pt7b);
   lcd.setTextSize(1);

@@ -1,7 +1,7 @@
 #include "control.h"
 
 // float setpointLow = 20.0;
-float setpointHigh = 40.0;
+extern float setpointHigh;
 
 bool fanState = false;
 extern bool tuning;
