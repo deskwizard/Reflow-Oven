@@ -134,21 +134,6 @@ void handleDisplay() {
     updatePowerIndicator();
     if (deviceMode == MODE_PID_RUNNING) {
       updatePIDValues();
-
-      // // Just testing it here
-
-      // Serial.print(_ewma);
-      // Serial.print("°C  (");
-      // Serial.print(CtoF(_ewma));
-      // Serial.print("°F)");
-
-      // Serial.print("  -  ");
-      // Serial.print(getOutputValue(), 0);
-      // Serial.print("/");
-      // Serial.print(getSpan(), 0);
-      // Serial.print(" (");
-      // Serial.print((getOutputValue() / getSpan()) * 100, 0);
-      // Serial.print("%)");
     }
     previousMillis = currentMillis;
   }
@@ -170,7 +155,7 @@ void updateSetpointDisplay() {
   lcd.drawString("SP: ", 0, 12, GFXFF);
 
   lcd.setTextDatum(CR_DATUM);
-  lcd.drawNumber(displayValue, 80, 12, GFXFF);
+  lcd.drawNumber(uint16_t(displayValue), 80, 12, GFXFF);
 }
 
 void updateDisplay() {
@@ -188,11 +173,6 @@ void updateDisplay() {
   lcd.setFreeFont(&FreeSansBold18pt7b);
   lcd.setTextSize(2);
   lcd.setTextDatum(CR_DATUM);
-
-  // Serial.print("Wtf: ");
-  // Serial.print(displayValue);
-  // Serial.print("  ");
-  // Serial.println(_ewma);
 
   lcd.drawFloat(displayValue, 0, TVAL_W, 28, GFXFF);
 }
@@ -214,9 +194,12 @@ void toggleDisplayUnit() {
 
 void updateUnitDisplay() {
 
+lcd.setTextColor(TFT_GREEN);
+
   // Main display
   lcd.setViewport(T_UNITVP__X, T_UNIT_Y, T_UNIT_W, T_UNIT_H);
   lcd.fillScreen(T_UNIT_FILL);
+  lcd.setTextColor(TFT_GREEN);
   lcd.setFreeFont(&FreeSansBold12pt7b);
   lcd.setTextSize(1);
   lcd.setTextDatum(TR_DATUM);

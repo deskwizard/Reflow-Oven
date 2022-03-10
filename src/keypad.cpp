@@ -5,8 +5,8 @@
 
 uint8_t adjustStep = 1; // 1, 10, 100
 
-extern double setpointLow;
-extern double setpointHigh;
+extern float setpointLow;
+extern float setpointHigh;
 extern uint8_t deviceMode;
 extern bool displayUnit;
 
