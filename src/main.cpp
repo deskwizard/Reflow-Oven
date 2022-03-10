@@ -43,7 +43,7 @@ void setup() {
 }
 
 void loop() {
-  //handleDisplay();
+  handleDisplay();
   handleKeypad();
   handleSensor();
   handlePID();

@@ -7,7 +7,7 @@
 #include <SPI.h>
 #include <TFT_eSPI.h>
 
-#define VP_DEBUG
+//#define VP_DEBUG
 
 // Are those the right values?
 #define DISPLAY_W 127

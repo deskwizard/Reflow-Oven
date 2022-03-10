@@ -4,7 +4,6 @@
 extern float setpointHigh;
 
 bool fanState = false;
-extern bool tuning;
 
 void initOutputs() {
 
