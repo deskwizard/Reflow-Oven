@@ -51,7 +51,7 @@ void displayOTAStarting(String type) {
 
   lcd.setViewport(0, 116, DISPLAY_W / 2, 21);
   lcd.setTextColor(TFT_GREEN);
-  lcd.fillScreen(TFT_DARKGREEN);
+  lcd.fillScreen(TFT_BLACK);
   lcd.setTextDatum(CL_DATUM);
   lcd.drawString(type, 0, 10);
 }
