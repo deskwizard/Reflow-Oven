@@ -67,4 +67,7 @@ void updatePIDValues();
 
 void displayOTASetup();
 void displayOTAIP(String ipaddr);
+void displayOTADone();
+void displayOTAProgress(uint8_t progress);
+void displayOTAStarting(String type);
 #endif

@@ -46,19 +46,19 @@ void initOTA() {
       .onStart([]() {
         String type;
         if (ArduinoOTA.getCommand() == U_FLASH)
-          type = "sketch";
+          type = "Flash";
         else // U_SPIFFS
-          type = "filesystem";
+          type = "Spiffs";
 
         // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS
         // using SPIFFS.end()
         Serial.println("Start updating " + type);
 
-        //displayOTAStarting(type);
+        displayOTAStarting(type);
       })
       .onEnd([]() {
         Serial.println("\nEnd");
-        //displayOTADone();
+        displayOTADone();
         delay(2000);
       })
       .onProgress([](unsigned int progress, unsigned int total) {
@@ -71,7 +71,7 @@ void initOTA() {
         Serial.println(actual_progress);
 
         // show progress on lcd
-        //displayOTAProgress(actual_progress);
+        displayOTAProgress(actual_progress);
       })
       .onError([](ota_error_t error) {
         Serial.printf("Error[%u]: ", error);
