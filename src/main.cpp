@@ -5,13 +5,6 @@
 #include "mypid.h"
 #include "sensor.h"
 
-#ifdef OTA_ENABLED
-#include "credentials.h"
-#include <ArduinoOTA.h>
-#include <ESPmDNS.h>
-#include <WiFi.h>
-#include <WiFiUdp.h>
-#endif
 void initOTA();
 void handleOTA();
 
@@ -20,6 +13,7 @@ BluetoothSerial SerialBT;
 #endif
 
 void printSerialHelp();
+extern uint8_t deviceMode;
 
 float CtoF(float celsius) { return (celsius * 1.8f) + 32.0f; }
 
@@ -36,8 +30,13 @@ void setup() {
 #endif
 
   initKeypad();
-  initOTA();
   initDisplay();
+  if (deviceMode == MODE_OTA) {
+    initOTA();
+  }
+
+  // Does it matter if we start these in OTA mode ?
+  //  initDisplay();
   initOutputs();
   initSensor();
 
@@ -45,67 +44,71 @@ void setup() {
 }
 
 void loop() {
-  handleDisplay();
-  handleKeypad();
-  handleSensor();
-  handlePID();
-  handleOTA();
 
-  if (Serial.available()) {
+  if (deviceMode != MODE_OTA) {
+    handleDisplay();
+    handleKeypad();
+    handleSensor();
+    handlePID();
 
-    unsigned char c = Serial.read();
-    float readValueF;
-    uint16_t readValueC;
+    if (Serial.available()) {
 
-    switch (c) {
+      unsigned char c = Serial.read();
+      float readValueF;
+      uint16_t readValueC;
 
-    case 'p':
-      readValueF = Serial.parseFloat();
-      setKp(readValueF);
-      break;
-    case 'i':
-      readValueF = Serial.parseFloat();
-      setKi(readValueF);
-      break;
-    case 'd':
-      readValueF = Serial.parseFloat();
-      setKd(readValueF);
-      break;
+      switch (c) {
 
-    case 'P':
-      Serial.print("Kp: ");
-      Serial.println(getKp(), 4);
-      break;
-    case 'I':
-      Serial.print("Ki: ");
-      Serial.println(getKi(), 4);
-      break;
-    case 'D':
-      Serial.print("Kd: ");
-      Serial.println(getKd(), 4);
-      break;
+      case 'p':
+        readValueF = Serial.parseFloat();
+        setKp(readValueF);
+        break;
+      case 'i':
+        readValueF = Serial.parseFloat();
+        setKi(readValueF);
+        break;
+      case 'd':
+        readValueF = Serial.parseFloat();
+        setKd(readValueF);
+        break;
 
-    case 'q':
-      readValueC = Serial.parseInt();
-      setDwellTime(readValueC);
-      break;
+      case 'P':
+        Serial.print("Kp: ");
+        Serial.println(getKp(), 4);
+        break;
+      case 'I':
+        Serial.print("Ki: ");
+        Serial.println(getKi(), 4);
+        break;
+      case 'D':
+        Serial.print("Kd: ");
+        Serial.println(getKd(), 4);
+        break;
 
-    case 'c':
-      readValueC = Serial.parseInt();
-      setPreheatDutyCycle(readValueC);
-      break;
-    case 'v':
-      readValueC = Serial.parseInt();
-      setPreheatTime(readValueC);
-      break;
-    case 'w':
-      readValueC = Serial.parseInt();
-      setDwellTime(readValueC);
-      break;
-    case 'h':
-      printSerialHelp();
-      break;
+      case 'q':
+        readValueC = Serial.parseInt();
+        setDwellTime(readValueC);
+        break;
+
+      case 'c':
+        readValueC = Serial.parseInt();
+        setPreheatDutyCycle(readValueC);
+        break;
+      case 'v':
+        readValueC = Serial.parseInt();
+        setPreheatTime(readValueC);
+        break;
+      case 'w':
+        readValueC = Serial.parseInt();
+        setDwellTime(readValueC);
+        break;
+      case 'h':
+        printSerialHelp();
+        break;
+      }
     }
+  } else {
+    handleOTA();
   }
 }
 
@@ -126,12 +129,15 @@ void printSerialHelp() {
   Serial.println("---------------------------------------------");
   Serial.println();
 }
-
-void initOTA() {
+/*
+void initOTA()
+{
 #ifdef OTA_ENABLED
+Serial.println("OTA Start");
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+  while (WiFi.waitForConnectResult() != WL_CONNECTED)
+  {
     Serial.println("Connection Failed! Rebooting...");
     delay(5000);
     ESP.restart();
@@ -151,7 +157,8 @@ void initOTA() {
   // ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
 
   ArduinoOTA
-      .onStart([]() {
+      .onStart([]()
+               {
         String type;
         if (ArduinoOTA.getCommand() == U_FLASH)
           type = "sketch";
@@ -160,13 +167,13 @@ void initOTA() {
 
         // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS
         // using SPIFFS.end()
-        Serial.println("Start updating " + type);
-      })
-      .onEnd([]() { Serial.println("\nEnd"); })
-      .onProgress([](unsigned int progress, unsigned int total) {
-        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-      })
-      .onError([](ota_error_t error) {
+        Serial.println("Start updating " + type); })
+      .onEnd([]()
+             { Serial.println("\nEnd"); })
+      .onProgress([](unsigned int progress, unsigned int total)
+                  { Serial.printf("Progress: %u%%\r", (progress / (total /
+100))); }) .onError([](ota_error_t error)
+               {
         Serial.printf("Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR)
           Serial.println("Auth Failed");
@@ -177,8 +184,7 @@ void initOTA() {
         else if (error == OTA_RECEIVE_ERROR)
           Serial.println("Receive Failed");
         else if (error == OTA_END_ERROR)
-          Serial.println("End Failed");
-      });
+          Serial.println("End Failed"); });
 
   ArduinoOTA.begin();
 
@@ -188,8 +194,10 @@ void initOTA() {
 #endif
 }
 
-void handleOTA() {
+void handleOTA()
+{
 #ifdef OTA_ENABLED
   ArduinoOTA.handle();
 #endif
 }
+*/

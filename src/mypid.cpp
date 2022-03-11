@@ -12,7 +12,7 @@ uint32_t dwellTime = (5 * 60000);
 uint32_t dwellStartTime = 0;
 
 // Different settings depending on under/over + diff if under
-float nearKp = 0.05, nearKi = 0.01, nearKd = 0;
+float nearKp = 0.01, nearKi = 0.01, nearKd = 0.1;
 float aggKp = 4, aggKi = 0.2, aggKd = 1;
 //float consKp = 0.5, consKi = 0.2, consKd = 0.25;
 

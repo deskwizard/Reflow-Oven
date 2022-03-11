@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 // #define BT_SERIAL_ENABLED
-// #define OTA_ENABLED
+#define OTA_ENABLED
 
 #ifdef BT_SERIAL_ENABLED
 #include "BluetoothSerial.h"
@@ -20,6 +20,7 @@ extern BluetoothSerial SerialBT;
 #define MODE_PID_DWELL 7
 #define MODE_PID_PREHEAT 8 
 #define MODE_PID_RUNNING 9
+#define MODE_OTA 66
 
 /********************** Output Pins **********************/
 
@@ -41,10 +42,10 @@ extern BluetoothSerial SerialBT;
 // These need to be together since they're
 // over the control module cable.
 // TODO: Doublecheck HOTA/HOTB pins
-#define PIN_FAN 15
+#define PIN_FAN 16
 #define PIN_HOTA 2
 #define PIN_HOTB 4
-#define PIN_BUZZ 16
+#define PIN_BUZZ 15
 
 /********************** Keypad **********************/
 

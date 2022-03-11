@@ -21,11 +21,9 @@ uint16_t lastKeys = 0;
 hw_timer_t *timer = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
-void initKeypad()
-{
+void initKeypad() {
 
-  for (uint8_t x = 0; x < ROWS_COUNT; x++)
-  {
+  for (uint8_t x = 0; x < ROWS_COUNT; x++) {
     pinMode(rowPins[x], INPUT_PULLDOWN);
   }
 
@@ -42,28 +40,24 @@ void initKeypad()
   // Serial.print("K: ");
   // Serial.println(allKeys);
 
-  if (allKeys == 8)
-  {
+  if (allKeys == 8) {
     // Key 3 help down
     // Set OTA mode, start OTA, etc...
-    Serial.print("meep");
+    deviceMode = MODE_OTA;
+    Serial.print("OTA key detected");
     Serial.println(allKeys);
+  } else {
+    initTimer();
   }
-
-  initTimer();
 }
 
-void handleKeypad()
-{
+void handleKeypad() {
 
-  if (lastKeys != allKeys)
-  {
+  if (lastKeys != allKeys) {
     // Serial.print("Key ");
 
-    for (uint8_t x = 1; x <= 14; x++)
-    { // Start at 1, we don't have a key 0
-      if (bitRead(lastKeys, x) != bitRead(allKeys, x))
-      {
+    for (uint8_t x = 1; x <= 14; x++) { // Start at 1, we don't have a key 0
+      if (bitRead(lastKeys, x) != bitRead(allKeys, x)) {
         // Serial.print(x);
         //  Serial.print(": ");
         //   Serial.print(bitRead(allKeys, x));
@@ -81,8 +75,7 @@ void handleKeypad()
   }
 }
 
-void reactKeys(uint8_t key, uint8_t state)
-{
+void reactKeys(uint8_t key, uint8_t state) {
 
   printKeyDebug(key, state);
 
@@ -92,29 +85,22 @@ void reactKeys(uint8_t key, uint8_t state)
   static bool hotAState = false;
   static bool hotBState = false;
 
-  if (key == 1)
-  {
-    if (state == PRESSED)
-    {
+  if (key == 1) {
+    if (state == PRESSED) {
 
-      if (deviceMode == MODE_IDLE)
-      {
+      if (deviceMode == MODE_IDLE) {
         startPID();
-      }
-      else
-      {
+      } else {
         stopPID();
         deviceMode = MODE_IDLE;
       }
     }
   }
 
-  if (key == 5)
-  {
+  if (key == 5) {
     Serial.print(F("Fan"));
 
-    if (state == PRESSED)
-    {
+    if (state == PRESSED) {
       toggleFan();
     }
   }
@@ -131,59 +117,44 @@ void reactKeys(uint8_t key, uint8_t state)
   //   }
   // }
 
-  if (key == 7)
-  {
+  if (key == 7) {
     // Serial.print(F("begel"));
-    if (state == PRESSED)
-    {
+    if (state == PRESSED) {
       toggleDisplayUnit();
     }
   }
 
-  if (key == 8)
-  {
-    if (state == PRESSED)
-    {
+  if (key == 8) {
+    if (state == PRESSED) {
       Serial.print(F("HOTA: "));
       hotAState = !hotAState;
       Serial.println(hotAState);
       digitalWrite(PIN_HOTA, hotAState);
     }
   }
-  if (key == 9)
-  {
-    if (state == PRESSED)
-    {
+  if (key == 9) {
+    if (state == PRESSED) {
       Serial.print(F("HOTB: "));
       hotBState = !hotBState;
       Serial.println(hotBState);
       digitalWrite(PIN_HOTB, hotBState);
     }
   }
-  if (key == 10)
-  {
+  if (key == 10) {
     Serial.print(F("Degel"));
 
-    if (state == PRESSED)
-    {
+    if (state == PRESSED) {
       setBuzzer(HIGH);
-    }
-    else if (state == RELEASED)
-    {
+    } else if (state == RELEASED) {
       setBuzzer(LOW);
     }
   }
 
-  if (key == 11)
-  {
-    if (state == PRESSED)
-    {
-      if (displayUnit == UNIT_C)
-      {
+  if (key == 11) {
+    if (state == PRESSED) {
+      if (displayUnit == UNIT_C) {
         setpointHigh = setpointHigh + adjustStep;
-      }
-      else
-      {
+      } else {
         setpointHigh = setpointHigh + (adjustStep * 0.555555556f);
       }
       Serial.print("SPH: ");
@@ -216,17 +187,12 @@ void reactKeys(uint8_t key, uint8_t state)
     }
   }
 
-  if (key == 12)
-  {
+  if (key == 12) {
     // Serial.print(F("Down"));
-    if (state == PRESSED)
-    {
-      if (displayUnit == UNIT_C)
-      {
+    if (state == PRESSED) {
+      if (displayUnit == UNIT_C) {
         setpointHigh = setpointHigh - adjustStep;
-      }
-      else
-      {
+      } else {
         setpointHigh = setpointHigh - (adjustStep * 0.555555556f);
       }
       Serial.print("SPH: ");
@@ -260,11 +226,9 @@ void reactKeys(uint8_t key, uint8_t state)
     /*************************************/
   }
 
-  if (key == 14)
-  {
+  if (key == 14) {
     Serial.print(F("Start/Stop"));
-    if (state == PRESSED)
-    {
+    if (state == PRESSED) {
       /*
             if (displayMode == MODE_RUN) {
               lastIdleOrRun = displayMode;
@@ -295,31 +259,25 @@ void reactKeys(uint8_t key, uint8_t state)
   Serial.println();
 }
 
-void getKeys()
-{
+void getKeys() {
   static bool cycle = 0;
 
   bool pinRead;
 
-  if (cycle == 0)
-  {
+  if (cycle == 0) {
     pinMode(PIN_COL0, OUTPUT);
     digitalWrite(PIN_COL0, HIGH);
-    for (uint8_t x = 0; x < ROWS_COUNT; x++)
-    {
+    for (uint8_t x = 0; x < ROWS_COUNT; x++) {
       pinRead = digitalRead(rowPins[x]);
       bitWrite(allKeys, x, pinRead);
       // Serial.print(pinRead);
       // Serial.print(" ");
     }
     pinMode(PIN_COL0, INPUT);
-  }
-  else
-  {
+  } else {
     pinMode(PIN_COL1, OUTPUT);
     digitalWrite(PIN_COL1, HIGH);
-    for (uint8_t x = 0; x < ROWS_COUNT; x++)
-    {
+    for (uint8_t x = 0; x < ROWS_COUNT; x++) {
       pinRead = digitalRead(rowPins[x]);
       bitWrite(allKeys, x + 7, pinRead);
       // Serial.print(pinRead);
@@ -330,58 +288,44 @@ void getKeys()
   cycle = !cycle;
 }
 
-void printKeyDebug(uint8_t key, uint8_t state)
-{
+void printKeyDebug(uint8_t key, uint8_t state) {
 
   // Serial debug for keys
   Serial.print("Key ");
   Serial.print(key);
 
-  if (state == PRESSED)
-  {
+  if (state == PRESSED) {
     Serial.println(" was Pressed");
-  }
-  else if (state == RELEASED)
-  {
+  } else if (state == RELEASED) {
     Serial.println(" was Released");
-  }
-  else
-  {
+  } else {
     Serial.println("Woops, something went wrong");
   }
 }
 
-void printKeyDebugBT(uint8_t key, uint8_t state)
-{
+void printKeyDebugBT(uint8_t key, uint8_t state) {
 #ifdef BT_SERIAL_ENABLED
   // Serial debug for keys
   SerialBT.print("Key ");
   SerialBT.print(key);
 
-  if (state == PRESSED)
-  {
+  if (state == PRESSED) {
     SerialBT.println(" was Pressed");
-  }
-  else if (state == RELEASED)
-  {
+  } else if (state == RELEASED) {
     SerialBT.println(" was Released");
-  }
-  else
-  {
+  } else {
     SerialBT.println("Woops, something went wrong");
   }
 #endif
 }
 
-void IRAM_ATTR onTimer()
-{
+void IRAM_ATTR onTimer() {
   portENTER_CRITICAL_ISR(&timerMux);
   getKeys();
   portEXIT_CRITICAL_ISR(&timerMux);
 }
 
-void initTimer()
-{
+void initTimer() {
   timer = timerBegin(0, 80, true);
   timerAttachInterrupt(timer, &onTimer, true);
   timerAlarmWrite(timer, 10000, true); // In microseconds
