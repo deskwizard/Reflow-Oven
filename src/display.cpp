@@ -12,6 +12,81 @@ uint16_t displayReadRate = 1000;
 
 extern uint8_t deviceMode;
 
+void displayOTASetup() {
+  lcd.setTextColor(TFT_YELLOW);
+  lcd.setFreeFont(&FreeSans9pt7b);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.drawString("OTA Update", DISPLAY_W / 2, 10);
+
+  lcd.setViewport(0, 90, DISPLAY_W, 24);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.drawString("Connecting", DISPLAY_W / 2, 10);
+
+  //   lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
+  //   lcd.setTextDatum(CL_DATUM);
+  //   lcd.drawString("SSID: ", 0, 10);
+  //   lcd.drawString(getSSID(), 0, 25);
+}
+
+void displayOTAIP(String ipaddr) {
+  lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.setTextColor(TFT_ORANGE);
+  lcd.drawString(ipaddr, 0, 25);
+
+  lcd.setViewport(0, 90, DISPLAY_W, 24);
+  lcd.fillScreen(IND_STATE_FILL);
+  lcd.setTextColor(TFT_GREEN);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.drawString("Connected", DISPLAY_W / 2, 10);
+}
+
+/*
+void updateStateIndicator() {
+
+  lcd.setViewport(0, 90, DISPLAY_W, 24);
+  lcd.fillScreen(IND_STATE_FILL);
+  lcd.setFreeFont(&FreeSansBold9pt7b);
+  lcd.setTextSize(1);
+  lcd.setTextDatum(CC_DATUM);
+
+  if (deviceMode == MODE_PID_RUNNING) {
+    lcd.setTextColor(TFT_BLUE);
+    lcd.drawString("Running", DISPLAY_W / 2, 10);
+    updatePIDValues();
+  } else if (deviceMode == MODE_PID_PREHEAT) {
+    lcd.setTextColor(TFT_ORANGE);
+    lcd.drawString("Preheat", DISPLAY_W / 2, 10);
+    updatePIDValues();
+  } else if (deviceMode == MODE_PID_DWELL) {
+    lcd.setTextColor(TFT_YELLOW);
+    lcd.drawString("Dwell", DISPLAY_W / 2, 10);
+  }
+
+  else {
+    lcd.drawString("Ready", DISPLAY_W / 2, 10);
+
+    // Wipe the tuning values viewport
+    lcd.setViewport(0, 116, DISPLAY_W, 21);
+    lcd.fillScreen(TUNE_VAL_FILL);
+  }
+
+
+    // Setpoint display
+  // lcd.setViewport(111, SP_VP_Y, 27, SP_H);
+  // lcd.fillScreen(SP_UNIT_FILL);
+  // lcd.setFreeFont(&FreeSansBold9pt7b);
+  // lcd.setTextSize(1);
+  // lcd.setTextDatum(TR_DATUM);
+  // if (displayUnit == UNIT_C) {
+  //   lcd.drawChar('C', 0, 17, GFXFF);
+
+  // } else {
+  //   lcd.drawChar('F', 0, 17, GFXFF);
+  // }
+
+}
+*/
 void initDisplay() {
 
   lcd.init();
@@ -30,16 +105,18 @@ void initDisplay() {
   lcd.drawLine(0, 114, 127, 114, TFT_SKYBLUE);
   lcd.drawLine(0, 115, 127, 115, TFT_SKYBLUE);
 
-  // not gonna work because of the VP ?
-  // bottom of the power indicator
-  lcd.drawLine(0, 159, 157, 159, TFT_GREEN);
-  // right side of the power indicator
-  lcd.drawLine(127, 137, 127, 159, TFT_GREEN);
+  if (deviceMode != MODE_OTA) {
+    // not gonna work because of the VP ?
+    // bottom of the power indicator
+    lcd.drawLine(0, 159, 157, 159, TFT_GREEN);
+    // right side of the power indicator
+    lcd.drawLine(127, 137, 127, 159, TFT_GREEN);
 
-  updateUnitDisplay();
-  updateSetpointDisplay();
-  updatePowerIndicator();
-  updateStateIndicator();
+    updateUnitDisplay();
+    updateSetpointDisplay();
+    updatePowerIndicator();
+    updateStateIndicator();
+  }
 }
 
 void updatePIDValues() {
@@ -50,7 +127,7 @@ void updatePIDValues() {
     // We just wipe the screeen
     return;
   }
-  
+
   lcd.setFreeFont(&FreeSans9pt7b);
   lcd.setTextSize(1);
   lcd.setCursor(0, 15);
@@ -85,8 +162,7 @@ void updateStateIndicator() {
     lcd.setTextColor(TFT_ORANGE);
     lcd.drawString("Preheat", DISPLAY_W / 2, 10);
     updatePIDValues();
-  }
-  else if (deviceMode == MODE_PID_DWELL) {
+  } else if (deviceMode == MODE_PID_DWELL) {
     lcd.setTextColor(TFT_YELLOW);
     lcd.drawString("Dwell", DISPLAY_W / 2, 10);
   }
@@ -196,7 +272,7 @@ void toggleDisplayUnit() {
 
 void updateUnitDisplay() {
 
-lcd.setTextColor(TFT_GREEN);
+  lcd.setTextColor(TFT_GREEN);
 
   // Main display
   lcd.setViewport(T_UNITVP__X, T_UNIT_Y, T_UNIT_W, T_UNIT_H);

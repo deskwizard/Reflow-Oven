@@ -64,4 +64,7 @@ void updatePowerIndicator();
 void updateStateIndicator();
 // void updateTuningValues();
 void updatePIDValues();
+
+void displayOTASetup();
+void displayOTAIP(String ipaddr);
 #endif

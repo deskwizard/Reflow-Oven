@@ -11,11 +11,15 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 
+String getSSID() {
+  return WiFi.SSID();
+}
+
 void handleOTA() { ArduinoOTA.handle(); }
 
 void initOTA() {
 
-  // displayOTASetup();
+  displayOTASetup();
 
   // Start wifi for OTA
   Serial.println("Starting Wifi...");
@@ -88,7 +92,9 @@ void initOTA() {
   //displayOTASuccess(WiFi.localIP().toString());
 
   Serial.print("OTA Ready at IP address: ");
+  
   Serial.println(WiFi.localIP());
+  displayOTAIP(WiFi.localIP().toString());
 
   delay(5000);
 

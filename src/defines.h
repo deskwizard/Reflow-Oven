@@ -75,4 +75,5 @@ extern BluetoothSerial SerialBT;
 // #define RUNMODE_ERROR 6
 
 float CtoF(float celsius);
+String getSSID();
 #endif
