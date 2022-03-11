@@ -34,11 +34,13 @@ void setup() {
   SerialBT.println("Hello");
   SerialBT.println();
 #endif
+
+  initKeypad();
   initOTA();
   initDisplay();
   initOutputs();
   initSensor();
-  initKeypad();
+
   initPID();
 }
 

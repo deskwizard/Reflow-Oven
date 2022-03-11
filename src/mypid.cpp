@@ -8,16 +8,18 @@ float outputValue = 0.0;
 uint16_t preheatDutyCycle = 127;
 uint32_t preheatTime = (2 * 60000); // minutes * (60sec * 1000ms)
 uint32_t preheatStartTime = 0;
-uint32_t dwellTime = (3 * 60000);
+uint32_t dwellTime = (5 * 60000);
 uint32_t dwellStartTime = 0;
 
 // Different settings depending on under/over + diff if under
-float nearKp = 0.001, nearKi = 0.01, nearKd = 0.01;
+float nearKp = 0.05, nearKi = 0.01, nearKd = 0;
 float aggKp = 4, aggKi = 0.2, aggKd = 1;
-float consKp = 0.5, consKi = 0.2, consKd = 0.25;
+//float consKp = 0.5, consKi = 0.2, consKd = 0.25;
 
 // Specify the links and initial tuning parameters
 float Kp = 0.001, Ki = 0.01, Kd = 0.01;
+
+float consKp = 0.5, consKi = 0.1, consKd = 0.1;
 
 // QuickPID myPID(&_ewma, &outputValue, &setpointHigh, Kp, Ki, Kd, DIRECT);
 QuickPID myPID(&_ewma, &outputValue, &setpointHigh, consKp, consKi,
@@ -109,7 +111,7 @@ void initPID() {
   ledcAttachPin(PIN_PWM, PWMChannel);
 
   //   myPID.SetOutputLimits(0, 255);
-  //   myPID.SetSampleTimeUs(100000);
+  myPID.SetSampleTimeUs(10000000); // 1000000 = 1 second, max uint32_t
 
   // Start with these tunings
   myPID.SetTunings(consKp, consKi, consKd);
@@ -123,7 +125,7 @@ void handlePID() {
 
     if (_ewma > setpointHigh) {
       myPID.SetTunings(aggKp, aggKi, aggKd);
-    } else if ((setpointHigh - _ewma) > 10.0) {
+    } else if ((setpointHigh - _ewma) < 10.0) {
       myPID.SetTunings(nearKp, nearKi, nearKd);
     } else {
       myPID.SetTunings(consKp, consKi, consKd);
@@ -171,6 +173,7 @@ void handlePID() {
       Serial.println("Preheat end");
       deviceMode = MODE_PID_DWELL;
       updateStateIndicator();
+      updatePIDValues();
       outputValue = 0;
       ledcWrite(PWMChannel, outputValue);
       preheatStartTime = 0;

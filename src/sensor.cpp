@@ -40,8 +40,11 @@ void handleSensor() {
 
   if ((uint32_t)(currentMillis - previousMillis) >= sensorReadRate) {
 
+#ifndef FAKE_SENSOR
     float tempC = float(readSensorValue() * 0.25);
-
+#else
+    float tempC = FAKE_SENSOR_VAL;
+#endif
     // float tempC = 123.8;
 
     // // Apply the EWMA formula

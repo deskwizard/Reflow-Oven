@@ -45,6 +45,12 @@ void initDisplay() {
 void updatePIDValues() {
   lcd.setViewport(0, 116, DISPLAY_W, 21);
   lcd.fillScreen(TUNE_VAL_FILL);
+
+  if (deviceMode == MODE_PID_DWELL) {
+    // We just wipe the screeen
+    return;
+  }
+  
   lcd.setFreeFont(&FreeSans9pt7b);
   lcd.setTextSize(1);
   lcd.setCursor(0, 15);

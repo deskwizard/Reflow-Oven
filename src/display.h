@@ -63,4 +63,5 @@ void updatePowerIndicator();
 
 void updateStateIndicator();
 // void updateTuningValues();
+void updatePIDValues();
 #endif
