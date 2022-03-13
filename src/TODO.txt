@@ -1,5 +1,8 @@
 * = WIP / Partial implementation
 
+
+setpointHigh extern in keypad.cpp
+
 Todo list (mandatory):
     -   Figure out why the serial PID setting doesn't work
         but works in the PID loop.

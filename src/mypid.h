@@ -47,6 +47,7 @@ uint8_t getPreheatTime();
 uint8_t getPreheatDutyCycle();
 uint8_t getDwellTime();
 
+float getSetpointHigh();
 
 void printValues();
 void printValuesBT();
