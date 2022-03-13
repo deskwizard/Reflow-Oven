@@ -21,7 +21,7 @@ void initSprite() {
   // Create a sprite of defined size and colour depth
   spr_fan.createSprite(SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
   spr_fan.setColorDepth(1);
-  //spr_fan.setBitmapColor(TFT_BLACK, TFT_WHITE);
+  spr_fan.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
 
   // Push the image to the sprite - only need to do this once.
   spr_fan.pushImage(
@@ -37,6 +37,15 @@ void initSprite() {
   lcd.setViewport(SPR_FAN_X_POS, SPR_FAN_Y_POS, SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
   lcd.fillScreen(SPR_FAN_FILL);
   spr_fan.pushSprite(0, 0); // Push sprite at VP origin
+}
+
+void updateFanStateDisplay(bool state) {
+  if (state) {
+    spr_fan.setBitmapColor(TFT_WHITE, TFT_BLACK);
+  } else {
+    spr_fan.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+     // spr_fan.pushRotated(0); // makes it looks odd
+  }
 }
 
 void updateFanSprite() {

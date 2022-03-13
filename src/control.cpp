@@ -31,6 +31,7 @@ void setFan(bool state) {
   Serial.print("fan: ");
   Serial.println(state);
   digitalWrite(PIN_FAN, fanState);
+  updateFanStateDisplay(fanState);
 }
 
 void toggleFan() {

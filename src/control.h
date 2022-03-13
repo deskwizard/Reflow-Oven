@@ -2,6 +2,7 @@
 #define _CONTROL_H_
 
 #include "defines.h"
+#include "display.h"
 
 // #define MODE_IDLE 0
 // #define MODE_RUN 1
