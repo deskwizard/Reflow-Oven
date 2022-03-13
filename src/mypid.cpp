@@ -1,9 +1,8 @@
 #include "mypid.h"
 
-extern float _ewma;
-
 float setpointHigh = 40.0;
 float outputValue = 0.0;
+float inputValue = 0.0;
 
 uint16_t preheatDutyCycle = 127;
 uint32_t preheatTime = (2 * 60000); // minutes * (60sec * 1000ms)
@@ -25,7 +24,7 @@ float Kp = 0.001, Ki = 0.01, Kd = 0.01;
 float consKp = 0.5, consKi = 0.1, consKd = 0.1;
 
 // QuickPID myPID(&_ewma, &outputValue, &setpointHigh, Kp, Ki, Kd, DIRECT);
-QuickPID myPID(&_ewma, &outputValue, &setpointHigh, consKp, consKi,
+QuickPID myPID(&inputValue, &outputValue, &setpointHigh, consKp, consKi,
                consKd,                /* OPTIONS */
                myPID.pMode::pOnError, /* pOnError, pOnMeas, pOnErrorMeas */
                myPID.dMode::dOnMeas,  /* dOnError, dOnMeas */
@@ -171,14 +170,15 @@ void handlePID() {
   uint32_t currentMillis = millis();
 
   if (getDeviceMode() == MODE_PID_RUNNING) {
+    inputValue = getAverageTemperature();
 
-    if (_ewma > setpointHigh) {
+    if (inputValue > setpointHigh) {
       Kp = aggKp;
       Ki = aggKi;
       Kd = aggKp;
       // myPID.SetTunings(aggKp, aggKi, aggKd);
       myPID.SetTunings(Kp, Ki, Kd);
-    } else if ((setpointHigh - _ewma) < float(PID_threshold)) {
+    } else if ((setpointHigh - inputValue) < float(PID_threshold)) {
       Kp = nearKp;
       Ki = nearKi;
       Kd = nearKd;
@@ -199,9 +199,9 @@ void handlePID() {
 
     if ((uint32_t)(currentMillis - previousMillis) >= 2000) {
 
-      Serial.print(_ewma);
+      Serial.print(inputValue);
       Serial.print("°C  (");
-      Serial.print(CtoF(_ewma));
+      Serial.print(CtoF(inputValue));
       Serial.print("°F)");
 
       Serial.print("  -  ");
