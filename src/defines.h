@@ -9,7 +9,7 @@
 #ifdef BT_SERIAL_ENABLED
 #include "BluetoothSerial.h"
 extern BluetoothSerial SerialBT;
-#endif 
+#endif
 
 #define OFF false
 #define ON true
@@ -18,7 +18,7 @@ extern BluetoothSerial SerialBT;
 
 #define MODE_IDLE 0
 #define MODE_PID_DWELL 7
-#define MODE_PID_PREHEAT 8 
+#define MODE_PID_PREHEAT 8
 #define MODE_PID_RUNNING 9
 #define MODE_OTA 66
 

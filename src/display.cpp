@@ -44,7 +44,7 @@ void updateFanStateDisplay(bool state) {
     spr_fan.setBitmapColor(TFT_WHITE, TFT_BLACK);
   } else {
     spr_fan.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
-     // spr_fan.pushRotated(0); // makes it looks odd
+    // spr_fan.pushRotated(0); // makes it looks odd
   }
 }
 
@@ -95,13 +95,9 @@ void initDisplay() {
   lcd.drawLine(0, 115, 127, 115, TFT_SKYBLUE);
 
   if (deviceMode != MODE_OTA) {
-    /*
-    // not gonna work because of the VP ?
-    // bottom of the power indicator
-    lcd.drawLine(0, 159, 157, 159, TFT_GREEN);
-    // right side of the power indicator
-    lcd.drawLine(127, 137, 127, 159, TFT_GREEN);
-    */
+
+    lcd.drawRect(0, (DISPLAY_H - IND_PWR_H) - 2, DISPLAY_W, IND_PWR_H + 2,
+                 TFT_GREEN);
   }
 
   initSprite();
@@ -171,17 +167,12 @@ void updateStateIndicator() {
 
 void updatePowerIndicator() {
 
-  lcd.setViewport(0, (DISPLAY_H - (IND_PWR_H + 1)), DISPLAY_W, IND_PWR_H);
+  lcd.setViewport(1, (DISPLAY_H - (IND_PWR_H + 1)), DISPLAY_W - 2, IND_PWR_H);
   lcd.fillScreen(IND_PWR_FILL);
 
-  lcd.drawLine(0, IND_PWR_H, DISPLAY_W, 0, TFT_GREEN);
-
   uint8_t width = uint8_t((getOutputValue() / MAX_DUTY_CYCLE) * DISPLAY_W);
-  uint8_t heigth = uint8_t((getOutputValue() / MAX_DUTY_CYCLE) * IND_PWR_H);
 
-  // Has a tiny glitch on the leftmost row when at 0... it'll wait.
-  lcd.fillTriangle(0, IND_PWR_H, width, IND_PWR_H, width, IND_PWR_H - heigth,
-                   TFT_GREEN);
+  lcd.fillRect(0, 0, width, IND_PWR_H, TFT_GREEN);
 }
 
 void handleDisplay() {

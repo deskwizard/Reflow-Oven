@@ -5,9 +5,7 @@ extern float setpointHigh;
 
 bool fanState = false;
 
-bool getFanState() {
-  return fanState;
-}
+bool getFanState() { return fanState; }
 
 void initOutputs() {
 

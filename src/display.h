@@ -1,9 +1,9 @@
 #ifndef _DISPLAY_H_
 #define _DISPLAY_H_
 
-#include "mypid.h"
 #include "control.h"
 #include "defines.h"
+#include "mypid.h"
 #include <SPI.h>
 #include <TFT_eSPI.h>
 
@@ -52,12 +52,10 @@
 
 #define GFXFF 1 // GFXFF font is font #1
 
-
-
 /*************************** Sprites ***************************/
 
 // Width and height of the fan sprite
-#define SPR_FAN_WIDTH  23
+#define SPR_FAN_WIDTH 23
 #define SPR_FAN_HEIGHT 23
 
 #define SPR_FAN_UPDATE_RATE 100
@@ -74,7 +72,6 @@
 #define SPR_FAN_Y_PIV (SPR_FAN_HEIGHT / 2) + (SPR_FAN_BORDER / 2)
 
 /*********************************************************************************/
-
 
 void initDisplay();
 void handleDisplay();
