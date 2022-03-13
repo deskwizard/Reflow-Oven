@@ -1,10 +1,10 @@
 #include "mypid.h"
 
 extern float _ewma;
-float setpointHigh = 40.0;
 
+float setpointHigh = 40.0;
 float outputValue = 0.0;
-// const float outputSpan = MAX_DUTY_CYCLE;
+
 uint16_t preheatDutyCycle = 127;
 uint32_t preheatTime = (2 * 60000); // minutes * (60sec * 1000ms)
 uint32_t preheatStartTime = 0;
@@ -32,16 +32,15 @@ QuickPID myPID(&_ewma, &outputValue, &setpointHigh, consKp, consKi,
                myPID.iAwMode::iAwCondition, /* iAwCondition, iAwClamp, iAwOff */
                myPID.Action::direct);       /* direct, reverse */
 
-uint8_t deviceMode = MODE_IDLE;
-
 float getOutputValue() { return outputValue; }
 float getKp() { return myPID.GetKp(); }
 float getKi() { return myPID.GetKi(); }
 float getKd() { return myPID.GetKd(); }
 float getSpan() { return MAX_DUTY_CYCLE; }
 
-uint8_t getDwellTime() { return dwellTime / 60000; }
+float getSetpointHigh() { return setpointHigh; }
 
+uint8_t getDwellTime() { return dwellTime / 60000; }
 uint8_t getPreheatTime() { return dwellTime / 60000; }
 uint8_t getPreheatDutyCycle() { return preheatDutyCycle; }
 
@@ -131,7 +130,7 @@ void setNearKd(float val) {
 void startPreheat() {
   myPID.SetMode(myPID.Control::manual);
   Serial.println("Preheat started");
-  deviceMode = MODE_PID_PREHEAT;
+  setDeviceMode(MODE_PID_PREHEAT);
   preheatStartTime = millis();
   outputValue = preheatDutyCycle;
   ledcWrite(PWMChannel, outputValue);
@@ -146,7 +145,7 @@ void startPID() {
 void stopPID() {
   Serial.println("PID Stop");
   myPID.SetMode(myPID.Control::manual);
-  deviceMode = MODE_IDLE;
+  setDeviceMode(MODE_IDLE);
   outputValue = 0;
   // Make sure we turn stuff off
   ledcWrite(PWMChannel, outputValue);
@@ -171,7 +170,7 @@ void handlePID() {
 
   uint32_t currentMillis = millis();
 
-  if (deviceMode == MODE_PID_RUNNING) {
+  if (getDeviceMode() == MODE_PID_RUNNING) {
 
     if (_ewma > setpointHigh) {
       Kp = aggKp;
@@ -226,12 +225,12 @@ void handlePID() {
     }
   } // running
 
-  else if (deviceMode == MODE_PID_PREHEAT) {
+  else if (getDeviceMode() == MODE_PID_PREHEAT) {
 
     if (((uint32_t)(currentMillis - preheatStartTime) >= preheatTime) &&
         preheatStartTime != 0) {
       Serial.println("Preheat end");
-      deviceMode = MODE_PID_DWELL;
+      setDeviceMode(MODE_PID_DWELL);
       updateStateIndicator();
       updatePIDValues();
       outputValue = 0;
@@ -241,11 +240,11 @@ void handlePID() {
     }
   } // preheat
 
-  else if (deviceMode == MODE_PID_DWELL) {
+  else if (getDeviceMode() == MODE_PID_DWELL) {
     if (((uint32_t)(currentMillis - dwellStartTime) >= dwellTime) &&
         dwellStartTime != 0) {
       Serial.println("Dwell end");
-      deviceMode = MODE_PID_RUNNING;
+      setDeviceMode(MODE_PID_RUNNING);
       updateStateIndicator();
       myPID.SetMode(myPID.Control::automatic);
       dwellStartTime = 0;

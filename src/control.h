@@ -17,4 +17,7 @@ void toggleFan();
 
 bool getFanState();
 
+void setDeviceMode(uint8_t mode);
+uint8_t getDeviceMode();
+
 #endif
