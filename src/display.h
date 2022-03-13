@@ -95,4 +95,6 @@ void displayOTAProgress(uint8_t progress);
 void displayOTAStarting(String type);
 
 void updateFanStateDisplay(bool state);
+
+bool getDisplayUnit();
 #endif

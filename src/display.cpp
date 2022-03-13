@@ -15,6 +15,8 @@ bool displayUnit = UNIT_C;
 
 uint16_t displayReadRate = 1000;
 
+bool getDisplayUnit() { return displayUnit; }
+
 void initSprite() {
   // Create a sprite of defined size and colour depth
   spr_fan.createSprite(SPR_FAN_WIDTH, SPR_FAN_HEIGHT);

@@ -2,9 +2,7 @@
 
 uint8_t adjustStep = 1; // 1, 10, 100
 
-extern float setpointLow;
 extern float setpointHigh;
-extern bool displayUnit;
 
 // Connect to the rows and columns pins of the kpd
 // Use that array in the code so we can have a nested loop
@@ -151,7 +149,7 @@ void reactKeys(uint8_t key, uint8_t state) {
 
   if (key == 11) {
     if (state == PRESSED) {
-      if (displayUnit == UNIT_C) {
+      if (getDisplayUnit() == UNIT_C) {
         setpointHigh = setpointHigh + adjustStep;
       } else {
         setpointHigh = setpointHigh + (adjustStep * 0.555555556f);
@@ -189,7 +187,7 @@ void reactKeys(uint8_t key, uint8_t state) {
   if (key == 12) {
     // Serial.print(F("Down"));
     if (state == PRESSED) {
-      if (displayUnit == UNIT_C) {
+      if (getDisplayUnit() == UNIT_C) {
         setpointHigh = setpointHigh - adjustStep;
       } else {
         setpointHigh = setpointHigh - (adjustStep * 0.555555556f);

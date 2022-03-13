@@ -13,7 +13,6 @@ BluetoothSerial SerialBT;
 #endif
 
 void printSerialHelp();
-extern uint8_t deviceMode;
 
 float CtoF(float celsius) { return (celsius * 1.8f) + 32.0f; }
 
@@ -35,7 +34,7 @@ void setup() {
 
   initKeypad();
   initDisplay();
-  if (deviceMode == MODE_OTA) {
+  if (getDeviceMode() == MODE_OTA) {
     // setCpuFrequencyMhz(80);
     initOTA();
   }
@@ -49,7 +48,7 @@ void setup() {
 
 void loop() {
 
-  if (deviceMode != MODE_OTA) {
+  if (getDeviceMode() != MODE_OTA) {
     handleDisplay();
     handleKeypad();
     handleSensor();
