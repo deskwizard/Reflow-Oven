@@ -1,6 +1,12 @@
 #include "display.h"
 
+// Image to byte array https://javl.github.io/image2cpp/
+// Choose "Horizontal, 1 bit per pixel" for monochrome
+#include "sprite_fan.h"
+
 TFT_eSPI lcd = TFT_eSPI();
+// Declare Sprite object "spr_fan" with pointer to "lcd" object
+TFT_eSprite spr_fan = TFT_eSprite(&lcd);
 
 extern float _ewma;
 extern float setpointHigh;
@@ -11,11 +17,61 @@ uint16_t displayReadRate = 1000;
 
 extern uint8_t deviceMode;
 
+void initSprite() {
+  // Create a sprite of defined size and colour depth
+  spr_fan.createSprite(SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
+  spr_fan.setColorDepth(1);
+  //spr_fan.setBitmapColor(TFT_BLACK, TFT_WHITE);
+
+  // Push the image to the sprite - only need to do this once.
+  spr_fan.pushImage(
+      SPR_FAN_BORDER, SPR_FAN_BORDER, SPR_FAN_WIDTH - (SPR_FAN_BORDER / 2),
+      SPR_FAN_HEIGHT - (SPR_FAN_BORDER / 2), (uint16_t *)fan_icon);
+
+  // Set the TFT pivot point to the centre of the sprite
+  lcd.setPivot(SPR_FAN_X_POS + SPR_FAN_X_PIV, SPR_FAN_Y_POS + SPR_FAN_Y_PIV);
+
+  // Set Sprite pivot point to centre of Sprite
+  spr_fan.setPivot(SPR_FAN_X_PIV, SPR_FAN_Y_PIV);
+
+  lcd.setViewport(SPR_FAN_X_POS, SPR_FAN_Y_POS, SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
+  lcd.fillScreen(SPR_FAN_FILL);
+  spr_fan.pushSprite(0, 0); // Push sprite at VP origin
+}
+
+void updateFanSprite() {
+
+  if (getFanState() == false) {
+    return;
+  }
+
+  static uint16_t angle = 0;
+
+  uint32_t currentMillis = millis();  // Get snapshot of time
+  static uint32_t previousMillis = 0; // Tracks the time since last event fired
+
+  if ((uint32_t)(currentMillis - previousMillis) >= SPR_FAN_UPDATE_RATE) {
+    lcd.setViewport(SPR_FAN_X_POS, SPR_FAN_Y_POS, SPR_FAN_WIDTH,
+                    SPR_FAN_HEIGHT);
+    spr_fan.pushRotated(angle);
+
+    angle = angle + SPR_FAN_ANGLE_PER_FRAME;
+
+    if (angle > 360) {
+      angle = 0;
+    }
+    previousMillis = currentMillis;
+  }
+}
+
 void initDisplay() {
 
   lcd.init();
   lcd.setRotation(2);
   lcd.fillScreen(TFT_BLACK);
+  /******************************************************/
+
+  /*****************************************************/
 
   lcd.setTextColor(TFT_GREEN);
   lcd.setFreeFont(&FreeSansBold18pt7b);
@@ -30,17 +86,21 @@ void initDisplay() {
   lcd.drawLine(0, 115, 127, 115, TFT_SKYBLUE);
 
   if (deviceMode != MODE_OTA) {
+    /*
     // not gonna work because of the VP ?
     // bottom of the power indicator
     lcd.drawLine(0, 159, 157, 159, TFT_GREEN);
     // right side of the power indicator
     lcd.drawLine(127, 137, 127, 159, TFT_GREEN);
-
-    updateUnitDisplay();
-    updateSetpointDisplay();
-    updatePowerIndicator();
-    updateStateIndicator();
+    */
   }
+
+  initSprite();
+
+  updateUnitDisplay();
+  updateSetpointDisplay();
+  updatePowerIndicator();
+  updateStateIndicator();
 }
 
 void updatePIDValues() {
@@ -98,21 +158,6 @@ void updateStateIndicator() {
     lcd.setViewport(0, 116, DISPLAY_W, 21);
     lcd.fillScreen(TUNE_VAL_FILL);
   }
-
-  /*
-    // Setpoint display
-  lcd.setViewport(111, SP_VP_Y, 27, SP_H);
-  lcd.fillScreen(SP_UNIT_FILL);
-  lcd.setFreeFont(&FreeSansBold9pt7b);
-  lcd.setTextSize(1);
-  lcd.setTextDatum(TR_DATUM);
-  if (displayUnit == UNIT_C) {
-    lcd.drawChar('C', 0, 17, GFXFF);
-
-  } else {
-    lcd.drawChar('F', 0, 17, GFXFF);
-  }
-  */
 }
 
 void updatePowerIndicator() {
@@ -143,6 +188,8 @@ void handleDisplay() {
     }
     previousMillis = currentMillis;
   }
+
+  updateFanSprite();
 }
 
 void updateSetpointDisplay() {
@@ -220,6 +267,8 @@ void updateUnitDisplay() {
 
   updateDisplay(); // Update the displayed value for the new unit
 }
+
+/*************************** Sprites ***************************/
 
 /***************************** OTA *****************************/
 

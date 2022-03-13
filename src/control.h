@@ -14,4 +14,6 @@ void setBuzzer(bool state);
 void setFan(bool state);
 void toggleFan();
 
+bool getFanState();
+
 #endif

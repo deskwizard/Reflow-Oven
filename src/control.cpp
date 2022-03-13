@@ -5,6 +5,10 @@ extern float setpointHigh;
 
 bool fanState = false;
 
+bool getFanState() {
+  return fanState;
+}
+
 void initOutputs() {
 
   pinMode(PIN_PWM, OUTPUT);
