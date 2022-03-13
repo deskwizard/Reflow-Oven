@@ -6,6 +6,7 @@
 #include "mypid.h"
 #include <SPI.h>
 #include <TFT_eSPI.h>
+#include "sensor.h"
 
 //#define VP_DEBUG
 

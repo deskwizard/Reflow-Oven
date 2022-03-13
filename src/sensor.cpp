@@ -6,6 +6,10 @@ const uint16_t sensorReadRate = 300; // --MINIMUM-- is 250ms
 float _ewmaAlpha = 0.1; // the EWMA alpha value (α)
 float _ewma = 0.0;      // the EWMA result (Si), initialized to zero
 
+float getAverageTemperature() {
+  return _ewma;
+}
+
 void initSensor() {
   pinMode(MAX6675_CS, OUTPUT);
   digitalWrite(MAX6675_CS, HIGH);

@@ -8,7 +8,6 @@ TFT_eSPI lcd = TFT_eSPI();
 // Declare Sprite object "spr_fan" with pointer to "lcd" object
 TFT_eSprite spr_fan = TFT_eSprite(&lcd);
 
-extern float _ewma;
 extern float setpointHigh;
 
 bool displayUnit = UNIT_C;
@@ -209,7 +208,7 @@ void updateSetpointDisplay() {
 
 void updateDisplay() {
 
-  float displayValue = _ewma;
+  float displayValue = getAverageTemperature();
 
   // lcd.setViewport(0, 26, 110, 60);
   lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
@@ -217,7 +216,7 @@ void updateDisplay() {
   lcd.setTextColor(TFT_GREEN);
 
   if (displayUnit == UNIT_F) {
-    displayValue = CtoF(_ewma);
+    displayValue = CtoF(displayValue);
   }
   lcd.setFreeFont(&FreeSansBold18pt7b);
   lcd.setTextSize(2);

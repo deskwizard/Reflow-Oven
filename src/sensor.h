@@ -19,4 +19,6 @@ void handleSensor();
 void printTempSerial(float tempC);
 void printTempSerialBT(float tempC);
 
+float getAverageTemperature();
+
 #endif
