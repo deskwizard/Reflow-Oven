@@ -1,9 +1,9 @@
 #ifndef _MY_PID_
 #define _MY_PID_
 
+#include "QuickPID.h"
 #include "defines.h"
 #include "display.h"
-#include "QuickPID.h"
 
 #define PWMFreq 5000 // 5 KHz
 #define PWMChannel 0
@@ -18,7 +18,6 @@ void handlePID();
 void toggleTuning();
 
 float getOutputValue();
-
 
 float getKp();
 float getKi();
@@ -37,11 +36,9 @@ void setConsKp(float val);
 void setConsKi(float val);
 void setConsKd(float val);
 
-
 void setPreheatTime(uint8_t minutes);
 void setPreheatDutyCycle(uint16_t dutyCycle);
 void setDwellTime(uint8_t minutes);
-
 
 uint8_t getPreheatTime();
 uint8_t getPreheatDutyCycle();

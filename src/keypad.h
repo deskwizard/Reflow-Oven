@@ -1,10 +1,10 @@
 #ifndef _KEYPAD_H_
 #define _KEYPAD_H_
 
-#include "mypid.h"
 #include "control.h"
 #include "defines.h"
 #include "display.h"
+#include "mypid.h"
 
 #define PRESSED 1
 #define RELEASED 0

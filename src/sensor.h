@@ -8,7 +8,6 @@
 //#define FAKE_SENSOR
 #define FAKE_SENSOR_VAL 123.2f;
 
-
 #define MAX6675_INVALID -1.0
 
 void initSensor();

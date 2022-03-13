@@ -8,10 +8,7 @@ TFT_eSPI lcd = TFT_eSPI();
 // Declare Sprite object "spr_fan" with pointer to "lcd" object
 TFT_eSprite spr_fan = TFT_eSprite(&lcd);
 
-extern float setpointHigh;
-
 bool displayUnit = UNIT_C;
-
 uint16_t displayReadRate = 1000;
 
 bool getDisplayUnit() { return displayUnit; }
@@ -192,12 +189,12 @@ void handleDisplay() {
 }
 
 void updateSetpointDisplay() {
-  float displayValue = setpointHigh;
+  float displayValue = getSetpointHigh();
   lcd.setViewport(0, SP_VP_Y, SP_VP_W, SP_H);
   lcd.fillScreen(SPVAL_FILL);
 
   if (displayUnit == UNIT_F) {
-    displayValue = CtoF(setpointHigh);
+    displayValue = CtoF(displayValue);
   }
   lcd.setFreeFont(&FreeSans12pt7b);
   lcd.setTextSize(1);

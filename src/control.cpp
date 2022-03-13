@@ -5,13 +5,9 @@ bool fanState = false;
 
 bool getFanState() { return fanState; }
 
-uint8_t getDeviceMode() {
-return deviceMode;
-}
+uint8_t getDeviceMode() { return deviceMode; }
 
-void setDeviceMode(uint8_t mode) {
-  deviceMode = mode;
-}
+void setDeviceMode(uint8_t mode) { deviceMode = mode; }
 
 void initOutputs() {
 

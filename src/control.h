@@ -11,10 +11,11 @@
 // #define MODE_COOL 4
 
 void initOutputs();
+
 void setBuzzer(bool state);
+
 void setFan(bool state);
 void toggleFan();
-
 bool getFanState();
 
 void setDeviceMode(uint8_t mode);

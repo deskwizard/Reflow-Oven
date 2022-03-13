@@ -1,14 +1,12 @@
 #include "sensor.h"
 
-const uint16_t sensorReadRate = 300; // --MINIMUM-- is 250ms
-
 // https://makeabilitylab.github.io/physcomp/advancedio/smoothing-input.html#arduino-ewma-implementation
 float _ewmaAlpha = 0.1; // the EWMA alpha value (α)
 float _ewma = 0.0;      // the EWMA result (Si), initialized to zero
 
-float getAverageTemperature() {
-  return _ewma;
-}
+const uint16_t sensorReadRate = 300; // --MINIMUM-- is 250ms
+
+float getAverageTemperature() { return _ewma; }
 
 void initSensor() {
   pinMode(MAX6675_CS, OUTPUT);
