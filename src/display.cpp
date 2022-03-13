@@ -15,8 +15,6 @@ bool displayUnit = UNIT_C;
 
 uint16_t displayReadRate = 1000;
 
-extern uint8_t deviceMode;
-
 void initSprite() {
   // Create a sprite of defined size and colour depth
   spr_fan.createSprite(SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
@@ -94,7 +92,7 @@ void initDisplay() {
   lcd.drawLine(0, 114, 127, 114, TFT_SKYBLUE);
   lcd.drawLine(0, 115, 127, 115, TFT_SKYBLUE);
 
-  if (deviceMode != MODE_OTA) {
+  if (getDeviceMode() != MODE_OTA) {
 
     lcd.drawRect(0, (DISPLAY_H - IND_PWR_H) - 2, DISPLAY_W, IND_PWR_H + 2,
                  TFT_GREEN);
@@ -112,7 +110,7 @@ void updatePIDValues() {
   lcd.setViewport(0, 116, DISPLAY_W, 21);
   lcd.fillScreen(TUNE_VAL_FILL);
 
-  if (deviceMode == MODE_PID_DWELL) {
+  if (getDeviceMode() == MODE_PID_DWELL) {
     // We just wipe the screeen
     return;
   }
@@ -143,15 +141,15 @@ void updateStateIndicator() {
   lcd.setTextSize(1);
   lcd.setTextDatum(CC_DATUM);
 
-  if (deviceMode == MODE_PID_RUNNING) {
+  if (getDeviceMode() == MODE_PID_RUNNING) {
     lcd.setTextColor(TFT_BLUE);
     lcd.drawString("Running", DISPLAY_W / 2, 10);
     updatePIDValues();
-  } else if (deviceMode == MODE_PID_PREHEAT) {
+  } else if (getDeviceMode() == MODE_PID_PREHEAT) {
     lcd.setTextColor(TFT_ORANGE);
     lcd.drawString("Preheat", DISPLAY_W / 2, 10);
     updatePIDValues();
-  } else if (deviceMode == MODE_PID_DWELL) {
+  } else if (getDeviceMode() == MODE_PID_DWELL) {
     lcd.setTextColor(TFT_YELLOW);
     lcd.drawString("Dwell", DISPLAY_W / 2, 10);
   }
@@ -183,7 +181,7 @@ void handleDisplay() {
   if ((uint32_t)(currentMillis - previousMillis) >= displayReadRate) {
     updateDisplay();
     updatePowerIndicator();
-    if (deviceMode == MODE_PID_RUNNING) {
+    if (getDeviceMode() == MODE_PID_RUNNING) {
       updatePIDValues();
     }
     previousMillis = currentMillis;

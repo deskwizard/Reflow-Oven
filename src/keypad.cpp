@@ -4,7 +4,6 @@ uint8_t adjustStep = 1; // 1, 10, 100
 
 extern float setpointLow;
 extern float setpointHigh;
-extern uint8_t deviceMode;
 extern bool displayUnit;
 
 // Connect to the rows and columns pins of the kpd
@@ -43,7 +42,7 @@ void initKeypad() {
   if (allKeys == 8) {
     // Key 3 help down
     // Set OTA mode, start OTA, etc...
-    deviceMode = MODE_OTA;
+    setDeviceMode(MODE_OTA);
     Serial.print("OTA key detected");
     Serial.println(allKeys);
   } else {
@@ -88,11 +87,11 @@ void reactKeys(uint8_t key, uint8_t state) {
   if (key == 1) {
     if (state == PRESSED) {
 
-      if (deviceMode == MODE_IDLE) {
+      if (getDeviceMode() == MODE_IDLE) {
         startPID();
       } else {
         stopPID();
-        deviceMode = MODE_IDLE;
+        setDeviceMode(MODE_IDLE);
       }
     }
   }

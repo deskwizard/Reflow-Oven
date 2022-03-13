@@ -1,5 +1,5 @@
 #include "sensor.h"
-extern uint8_t deviceMode;
+
 const uint16_t sensorReadRate = 300; // --MINIMUM-- is 250ms
 
 // https://makeabilitylab.github.io/physcomp/advancedio/smoothing-input.html#arduino-ewma-implementation
@@ -66,7 +66,7 @@ void handleSensor() {
 }
 
 void printTempSerial(float tempC) {
-  if (deviceMode != MODE_PID_RUNNING) {
+  if (getDeviceMode() != MODE_PID_RUNNING) {
     Serial.print(tempC);
     Serial.print("°C  (");
     Serial.print(CtoF(_ewma));

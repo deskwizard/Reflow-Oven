@@ -1,6 +1,5 @@
 #include "control.h"
 uint8_t deviceMode = MODE_IDLE;
-// float setpointLow = 20.0;
 extern float setpointHigh;
 
 bool fanState = false;
