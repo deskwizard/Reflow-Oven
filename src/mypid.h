@@ -19,21 +19,33 @@ void toggleTuning();
 
 float getOutputValue();
 
-// Do these actually work ... ??
+
 float getKp();
 float getKi();
 float getKd();
 float getSpan();
-// These do not for sure
+
 void setKp(float val);
 void setKi(float val);
 void setKd(float val);
 
+void setNearKp(float val);
+void setNearKi(float val);
+void setNearKd(float val);
+
+void setConsKp(float val);
+void setConsKi(float val);
+void setConsKd(float val);
 
 
 void setPreheatTime(uint8_t minutes);
 void setPreheatDutyCycle(uint16_t dutyCycle);
 void setDwellTime(uint8_t minutes);
+
+
+uint8_t getPreheatTime();
+uint8_t getPreheatDutyCycle();
+uint8_t getDwellTime();
 
 
 void printValues();

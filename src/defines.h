@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 // #define BT_SERIAL_ENABLED
-#define OTA_ENABLED
+// #define OTA_ENABLED
 
 #ifdef BT_SERIAL_ENABLED
 #include "BluetoothSerial.h"

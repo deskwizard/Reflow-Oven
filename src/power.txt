@@ -1,0 +1,33 @@
+  Electronics:
+
+    Using measuring box, 3.3V power.
+
+    setCpuFrequencyMhz(160); //  95mA
+    setCpuFrequencyMhz(80);  //  65mA
+    setCpuFrequencyMhz(40);  //  52mA
+
+    LCD:    20mA, so substract that from the total
+
+
+
+
+    Figures at 5V input, measured with the shitty USB meter
+    using 5V the USB-UART adapter is powered....
+
+    setCpuFrequencyMhz(160); // 110mA
+    setCpuFrequencyMhz(80);  //  80mA
+    setCpuFrequencyMhz(40);  //  70mA
+
+
+    LCD:
+
+
+
+    Relays: (at 12V, as per datasheet, worse case of -10%)
+        HJR-3FF-S-HJR   400 Ohms -->  33mA    x2
+        JQX-115F        324 Ohms -->  37mA
+
+        Relays total:   ~103mA
+
+    
+

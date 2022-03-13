@@ -3,7 +3,6 @@
 TFT_eSPI lcd = TFT_eSPI();
 
 extern float _ewma;
-// extern double setpointLow;
 extern float setpointHigh;
 
 bool displayUnit = UNIT_C;
@@ -11,72 +10,6 @@ bool displayUnit = UNIT_C;
 uint16_t displayReadRate = 1000;
 
 extern uint8_t deviceMode;
-
-void displayOTASetup() {
-  lcd.setTextColor(TFT_YELLOW);
-  lcd.setFreeFont(&FreeSans9pt7b);
-  lcd.setTextDatum(CC_DATUM);
-  lcd.drawString("OTA Update", DISPLAY_W / 2, 10);
-
-  lcd.setViewport(0, 90, DISPLAY_W, 24);
-  lcd.setTextDatum(CC_DATUM);
-  lcd.drawString("Connecting", DISPLAY_W / 2, 10);
-
-  //   lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
-  //   lcd.setTextDatum(CL_DATUM);
-  //   lcd.drawString("SSID: ", 0, 10);
-  //   lcd.drawString(getSSID(), 0, 25);
-}
-
-void displayOTAIP(String ipaddr) {
-  lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
-  lcd.setTextDatum(CC_DATUM);
-  lcd.setTextColor(TFT_ORANGE);
-  lcd.drawString(ipaddr, DISPLAY_W / 2, 25);
-
-  lcd.setViewport(0, 90, DISPLAY_W, 24);
-  lcd.fillScreen(IND_STATE_FILL);
-  lcd.setTextColor(TFT_MAGENTA);
-  lcd.setTextDatum(CC_DATUM);
-  lcd.drawString("Connected", DISPLAY_W / 2, 10);
-}
-
-void displayOTAStarting(String type) {
-
-  lcd.setViewport(0, 90, DISPLAY_W, 24);
-  lcd.fillScreen(IND_STATE_FILL);
-  lcd.setTextColor(TFT_SKYBLUE);
-  lcd.setTextDatum(CC_DATUM);
-  lcd.drawString("Uploading...", DISPLAY_W / 2, 10);
-
-  lcd.setViewport(0, 116, DISPLAY_W / 2, 21);
-  lcd.setTextColor(TFT_GREEN);
-  lcd.fillScreen(TFT_BLACK);
-  lcd.setTextDatum(CL_DATUM);
-  lcd.drawString(type, 0, 10);
-}
-
-void displayOTAProgress(uint8_t progress) {
-
-  lcd.setViewport(DISPLAY_W / 2, 116, (DISPLAY_W / 2) - 18, 21);
-  lcd.setTextColor(TFT_GREEN);
-  lcd.fillScreen(TFT_BLACK);
-  lcd.setTextDatum(CR_DATUM);
-  lcd.drawNumber(progress, 45, 10);
-
-  lcd.setViewport((DISPLAY_W / 2) + ((DISPLAY_W / 2) - 18), 116, 18, 21);
-  lcd.setTextColor(TFT_GREEN);
-  lcd.fillScreen(TFT_BLACK);
-  lcd.drawString("%", 18, 10);
-}
-
-void displayOTADone() {
-  lcd.setViewport(0, 90, DISPLAY_W, 24);
-  lcd.fillScreen(IND_STATE_FILL);
-  lcd.setTextColor(TFT_GREEN);
-  lcd.setTextDatum(CC_DATUM);
-  lcd.drawString("Success!", DISPLAY_W / 2, 10);
-}
 
 void initDisplay() {
 
@@ -254,13 +187,6 @@ void toggleDisplayUnit() {
   updateSetpointDisplay();
 }
 
-// void updateTuningText() {
-//   // if (tuning) {
-
-//   // } else {
-//   // }
-// }
-
 void updateUnitDisplay() {
 
   lcd.setTextColor(TFT_GREEN);
@@ -293,4 +219,67 @@ void updateUnitDisplay() {
   }
 
   updateDisplay(); // Update the displayed value for the new unit
+}
+
+/***************************** OTA *****************************/
+
+void displayOTASetup() {
+  lcd.setTextColor(TFT_YELLOW);
+  lcd.setFreeFont(&FreeSans9pt7b);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.drawString("OTA Update", DISPLAY_W / 2, 10);
+
+  lcd.setViewport(0, 90, DISPLAY_W, 24);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.drawString("Connecting", DISPLAY_W / 2, 10);
+}
+
+void displayOTAIP(String ipaddr) {
+  lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.setTextColor(TFT_ORANGE);
+  lcd.drawString(ipaddr, DISPLAY_W / 2, 25);
+
+  lcd.setViewport(0, 90, DISPLAY_W, 24);
+  lcd.fillScreen(IND_STATE_FILL);
+  lcd.setTextColor(TFT_MAGENTA);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.drawString("Connected", DISPLAY_W / 2, 10);
+}
+
+void displayOTAStarting(String type) {
+
+  lcd.setViewport(0, 90, DISPLAY_W, 24);
+  lcd.fillScreen(IND_STATE_FILL);
+  lcd.setTextColor(TFT_SKYBLUE);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.drawString("Uploading...", DISPLAY_W / 2, 10);
+
+  lcd.setViewport(0, 116, DISPLAY_W / 2, 21);
+  lcd.setTextColor(TFT_GREEN);
+  lcd.fillScreen(TFT_BLACK);
+  lcd.setTextDatum(CL_DATUM);
+  lcd.drawString(type, 0, 10);
+}
+
+void displayOTAProgress(uint8_t progress) {
+
+  lcd.setViewport(DISPLAY_W / 2, 116, (DISPLAY_W / 2) - 18, 21);
+  lcd.setTextColor(TFT_GREEN);
+  lcd.fillScreen(TFT_BLACK);
+  lcd.setTextDatum(CR_DATUM);
+  lcd.drawNumber(progress, 45, 10);
+
+  lcd.setViewport((DISPLAY_W / 2) + ((DISPLAY_W / 2) - 18), 116, 18, 21);
+  lcd.setTextColor(TFT_GREEN);
+  lcd.fillScreen(TFT_BLACK);
+  lcd.drawString("%", 18, 10);
+}
+
+void displayOTADone() {
+  lcd.setViewport(0, 90, DISPLAY_W, 24);
+  lcd.fillScreen(IND_STATE_FILL);
+  lcd.setTextColor(TFT_GREEN);
+  lcd.setTextDatum(CC_DATUM);
+  lcd.drawString("Success!", DISPLAY_W / 2, 10);
 }

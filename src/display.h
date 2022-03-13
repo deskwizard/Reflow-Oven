@@ -62,7 +62,6 @@ void updateSetpointDisplay();
 void updatePowerIndicator();
 
 void updateStateIndicator();
-// void updateTuningValues();
 void updatePIDValues();
 
 void displayOTASetup();
