@@ -20,18 +20,32 @@ void setDisplayMode(uint8_t mode) {
   displayMode = mode;
   // updateDisplay();
 
+  lcd.setViewport(60, 0, 40, SP_H);
+  lcd.fillScreen(TFT_BLACK);
+  lcd.setTextColor(TFT_GREEN);
+  lcd.setFreeFont(&FreeSansBold9pt7b);
+  lcd.setTextSize(1);
+  lcd.setTextDatum(CC_DATUM);
+
   if (displayMode == DISP_MODE_TEMP) {
     // will update automatically in handleDisplay();
   } else if (displayMode == DISP_MODE_MIN) {
+    lcd.drawString("Min", 20, 12, GFXFF);
     updateDisplay(getMinTemp());
     // Serial.print("disp update min: ");
     // Serial.println(getMinTemp());
   } else if (displayMode == DISP_MODE_MAX) {
+    lcd.drawString("Max", 20, 12, GFXFF);
     updateDisplay(getMaxTemp());
     // Serial.print("disp update max: ");
     // Serial.println(getMaxTemp());
   }
-  // Update the display
+  // else if (displayMode == DISP_MODE_SPADJ) {
+  //   lcd.drawString("SP", 20, 12, GFXFF);
+  //   updateDisplay(getSetpointHigh());
+  //   // Serial.print("disp update sp: ");
+  //   // Serial.println(getSetpointHigh());
+  // }
 }
 
 void initDisplay() {
@@ -66,6 +80,7 @@ void initDisplay() {
     updateSetpointDisplay();
     updatePowerIndicator();
     updateStateIndicator();
+    setDisplayMode(DISP_MODE_TEMP);
   }
 }
 
@@ -170,12 +185,9 @@ void updateSetpointDisplay() {
 }
 
 void updateDisplay(float displayValue) {
-  Serial.print("Update disp: ");
-  Serial.println(displayValue);
+  // Serial.print("Update disp: ");
+  // Serial.println(displayValue);
 
-  // float displayValue = getAverageTemperature();
-
-  // lcd.setViewport(0, 26, 110, 60);
   lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
   lcd.fillScreen(TVAL_FILL);
   lcd.setTextColor(TFT_GREEN);
@@ -189,25 +201,6 @@ void updateDisplay(float displayValue) {
 
   lcd.drawFloat(displayValue, 0, TVAL_W, 28, GFXFF);
 }
-
-// void updateDisplay() {
-
-//   float displayValue = getAverageTemperature();
-
-//   // lcd.setViewport(0, 26, 110, 60);
-//   lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
-//   lcd.fillScreen(TVAL_FILL);
-//   lcd.setTextColor(TFT_GREEN);
-
-//   if (displayUnit == UNIT_F) {
-//     displayValue = CtoF(displayValue);
-//   }
-//   lcd.setFreeFont(&FreeSansBold18pt7b);
-//   lcd.setTextSize(2);
-//   lcd.setTextDatum(CR_DATUM);
-
-//   lcd.drawFloat(displayValue, 0, TVAL_W, 28, GFXFF);
-// }
 
 void toggleDisplayUnit() {
   displayUnit = !displayUnit;
