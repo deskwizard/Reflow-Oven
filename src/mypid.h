@@ -10,6 +10,8 @@
 #define PWMResolution 8
 #define MAX_DUTY_CYCLE ((uint16_t)(pow(2, PWMResolution) - 1))
 
+#define PREHEAT_T_OFFSET 10 // In degree C
+
 void initPID();
 void startPID();
 void stopPID();
@@ -42,6 +44,7 @@ void setDwellTime(uint8_t minutes);
 
 uint8_t getPreheatTime();
 uint8_t getPreheatDutyCycle();
+float getPreheatTemp();
 uint8_t getDwellTime();
 
 float getSetpointHigh();

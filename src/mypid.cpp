@@ -9,6 +9,7 @@ uint32_t preheatTime = (2 * 60000); // minutes * (60sec * 1000ms)
 uint32_t preheatStartTime = 0;
 uint32_t dwellTime = (5 * 60000);
 uint32_t dwellStartTime = 0;
+float preheadTempTarget = 0.0;
 
 // Different settings depending on under/over + diff if under
 float nearKp = 0.01, nearKi = 0.01, nearKd = 0.1;
@@ -57,6 +58,7 @@ void decreaseSetpointHigh(uint8_t step) {
 
 uint8_t getDwellTime() { return dwellTime / 60000; }
 uint8_t getPreheatTime() { return dwellTime / 60000; }
+float getPreheatTemp() { return preheadTempTarget; }
 uint8_t getPreheatDutyCycle() { return preheatDutyCycle; }
 
 void setDwellTime(uint8_t minutes) {
@@ -143,6 +145,13 @@ void setNearKd(float val) {
 }
 
 void startPreheat() {
+
+  preheadTempTarget = setpointHigh - PREHEAT_T_OFFSET;
+  Serial.print("T: ");
+  Serial.println(preheadTempTarget);
+  Serial.print("Target preheat: ");
+  Serial.println(preheadTempTarget);
+
   myPID.SetMode(myPID.Control::manual);
   Serial.println("Preheat started");
   setDeviceMode(MODE_PID_PREHEAT);
@@ -243,8 +252,9 @@ void handlePID() {
 
   else if (getDeviceMode() == MODE_PID_PREHEAT) {
 
-    if (((uint32_t)(currentMillis - preheatStartTime) >= preheatTime) &&
-        preheatStartTime != 0) {
+    // if (((uint32_t)(currentMillis - preheatStartTime) >= preheatTime) &&
+    //     preheatStartTime != 0) {
+    if (getAverageTemperature() >= preheadTempTarget) {
       Serial.println("Preheat end");
       setDeviceMode(MODE_PID_DWELL);
       updateStateIndicator();
@@ -254,6 +264,18 @@ void handlePID() {
       preheatStartTime = 0;
       dwellStartTime = millis();
     }
+
+    // if (((uint32_t)(currentMillis - preheatStartTime) >= preheatTime) &&
+    //     preheatStartTime != 0) {
+    //   Serial.println("Preheat end");
+    //   setDeviceMode(MODE_PID_DWELL);
+    //   updateStateIndicator();
+    //   updatePIDValues();
+    //   outputValue = 0;
+    //   ledcWrite(PWMChannel, outputValue);
+    //   preheatStartTime = 0;
+    //   dwellStartTime = millis();
+    // }
   } // preheat
 
   else if (getDeviceMode() == MODE_PID_DWELL) {
