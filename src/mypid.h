@@ -51,6 +51,9 @@ float getSetpointHigh();
 void decreaseSetpointHigh(uint8_t step);
 void increaseSetpointHigh(uint8_t step);
 
+float getMaxTemp();
+float getMinTemp();
+
 void printValues();
 void printValuesBT();
 

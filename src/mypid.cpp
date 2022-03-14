@@ -32,6 +32,11 @@ QuickPID myPID(&inputValue, &outputValue, &setpointHigh, consKp, consKi,
                myPID.iAwMode::iAwCondition, /* iAwCondition, iAwClamp, iAwOff */
                myPID.Action::direct);       /* direct, reverse */
 
+float minTemp = 0.0;
+float maxTemp = 0.0;
+
+float getMaxTemp() { return maxTemp; }
+float getMinTemp() { return minTemp; }
 float getOutputValue() { return outputValue; }
 float getKp() { return myPID.GetKp(); }
 float getKi() { return myPID.GetKi(); }
@@ -158,6 +163,11 @@ void startPreheat() {
   preheatStartTime = millis();
   outputValue = preheatDutyCycle;
   ledcWrite(PWMChannel, outputValue);
+
+  // TOD: that might not be optimal, investigate later
+  // Reset min/max
+  maxTemp = 0.0;
+  minTemp = 0.0;
 }
 
 void startPID() {
@@ -197,7 +207,8 @@ void handlePID() {
   if (getDeviceMode() == MODE_PID_RUNNING) {
     inputValue = getAverageTemperature();
 
-    if (inputValue > setpointHigh) {
+    if (inputValue >= setpointHigh) {
+      maxTemp = inputValue;
       Kp = aggKp;
       Ki = aggKi;
       Kd = aggKp;
@@ -215,6 +226,10 @@ void handlePID() {
       Kd = consKd;
       // myPID.SetTunings(consKp, consKi, consKd);
       myPID.SetTunings(Kp, Ki, Kd);
+    }
+
+    if (inputValue < setpointHigh && maxTemp != 0.0) {
+      minTemp = inputValue;
     }
 
     myPID.Compute();
