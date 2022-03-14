@@ -94,14 +94,14 @@ void initDisplay() {
 
     lcd.drawRect(0, (DISPLAY_H - IND_PWR_H) - 2, DISPLAY_W, IND_PWR_H + 2,
                  TFT_GREEN);
+
+    initSprite();
+
+    updateUnitDisplay();
+    updateSetpointDisplay();
+    updatePowerIndicator();
+    updateStateIndicator();
   }
-
-  initSprite();
-
-  updateUnitDisplay();
-  updateSetpointDisplay();
-  updatePowerIndicator();
-  updateStateIndicator();
 }
 
 void updatePIDValues() {
