@@ -10,6 +10,14 @@
 
 //#define VP_DEBUG
 
+#define DISP_MODE_TEMP 0
+#define DISP_MODE_SPADJ 1
+#define DISP_MODE_MIN 5
+#define DISP_MODE_MAX 6
+
+uint8_t getDisplayMode();
+void setDisplayMode(uint8_t mode);
+
 // Are those the right values?
 #define DISPLAY_W 127
 #define DISPLAY_H 160
@@ -76,7 +84,7 @@
 
 void initDisplay();
 void handleDisplay();
-void updateDisplay();
+void updateDisplay(float displayValue);
 
 // Update both temp and SP units
 void updateUnitDisplay();
@@ -98,4 +106,9 @@ void displayOTAStarting(String type);
 void updateFanStateDisplay(bool state);
 
 bool getDisplayUnit();
+
+
+void initSprite();
+void updateFanStateDisplay(bool state);
+void updateFanSprite();
 #endif

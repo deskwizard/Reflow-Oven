@@ -8,65 +8,30 @@ TFT_eSPI lcd = TFT_eSPI();
 // Declare Sprite object "spr_fan" with pointer to "lcd" object
 TFT_eSprite spr_fan = TFT_eSprite(&lcd);
 
+uint8_t displayMode = DISP_MODE_TEMP; // Default to temperature
 bool displayUnit = UNIT_C;
 uint16_t displayReadRate = 1000;
 
 bool getDisplayUnit() { return displayUnit; }
 
-void initSprite() {
-  // Create a sprite of defined size and colour depth
-  spr_fan.createSprite(SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
-  spr_fan.setColorDepth(1);
-  spr_fan.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+uint8_t getDisplayMode() { return displayMode; }
 
-  // Push the image to the sprite - only need to do this once.
-  spr_fan.pushImage(
-      SPR_FAN_BORDER, SPR_FAN_BORDER, SPR_FAN_WIDTH - (SPR_FAN_BORDER / 2),
-      SPR_FAN_HEIGHT - (SPR_FAN_BORDER / 2), (uint16_t *)fan_icon);
+void setDisplayMode(uint8_t mode) {
+  displayMode = mode;
+  // updateDisplay();
 
-  // Set the TFT pivot point to the centre of the sprite
-  lcd.setPivot(SPR_FAN_X_POS + SPR_FAN_X_PIV, SPR_FAN_Y_POS + SPR_FAN_Y_PIV);
-
-  // Set Sprite pivot point to centre of Sprite
-  spr_fan.setPivot(SPR_FAN_X_PIV, SPR_FAN_Y_PIV);
-
-  lcd.setViewport(SPR_FAN_X_POS, SPR_FAN_Y_POS, SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
-  lcd.fillScreen(SPR_FAN_FILL);
-  spr_fan.pushSprite(0, 0); // Push sprite at VP origin
-}
-
-void updateFanStateDisplay(bool state) {
-  if (state) {
-    spr_fan.setBitmapColor(TFT_WHITE, TFT_BLACK);
-  } else {
-    spr_fan.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
-    // spr_fan.pushRotated(0); // makes it looks odd
+  if (displayMode == DISP_MODE_TEMP) {
+    // will update automatically in handleDisplay();
+  } else if (displayMode == DISP_MODE_MIN) {
+    updateDisplay(getMinTemp());
+    // Serial.print("disp update min: ");
+    // Serial.println(getMinTemp());
+  } else if (displayMode == DISP_MODE_MAX) {
+    updateDisplay(getMaxTemp());
+    // Serial.print("disp update max: ");
+    // Serial.println(getMaxTemp());
   }
-}
-
-void updateFanSprite() {
-
-  if (getFanState() == false) {
-    return;
-  }
-
-  static uint16_t angle = 0;
-
-  uint32_t currentMillis = millis();  // Get snapshot of time
-  static uint32_t previousMillis = 0; // Tracks the time since last event fired
-
-  if ((uint32_t)(currentMillis - previousMillis) >= SPR_FAN_UPDATE_RATE) {
-    lcd.setViewport(SPR_FAN_X_POS, SPR_FAN_Y_POS, SPR_FAN_WIDTH,
-                    SPR_FAN_HEIGHT);
-    spr_fan.pushRotated(angle);
-
-    angle = angle + SPR_FAN_ANGLE_PER_FRAME;
-
-    if (angle > 360) {
-      angle = 0;
-    }
-    previousMillis = currentMillis;
-  }
+  // Update the display
 }
 
 void initDisplay() {
@@ -176,8 +141,9 @@ void handleDisplay() {
   uint32_t currentMillis = millis();  // Get snapshot of time
   static uint32_t previousMillis = 0; // Tracks the time since last event fired
 
-  if ((uint32_t)(currentMillis - previousMillis) >= displayReadRate) {
-    updateDisplay();
+  if (((uint32_t)(currentMillis - previousMillis) >= displayReadRate) &&
+      displayMode == DISP_MODE_TEMP) {
+    updateDisplay(getAverageTemperature());
     updatePowerIndicator();
     if (getDeviceMode() == MODE_PID_RUNNING) {
       updatePIDValues();
@@ -203,9 +169,11 @@ void updateSetpointDisplay() {
   lcd.drawNumber(uint16_t(displayValue), SP_VP_W, 12, GFXFF);
 }
 
-void updateDisplay() {
+void updateDisplay(float displayValue) {
+  Serial.print("Update disp: ");
+  Serial.println(displayValue);
 
-  float displayValue = getAverageTemperature();
+  // float displayValue = getAverageTemperature();
 
   // lcd.setViewport(0, 26, 110, 60);
   lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
@@ -221,6 +189,25 @@ void updateDisplay() {
 
   lcd.drawFloat(displayValue, 0, TVAL_W, 28, GFXFF);
 }
+
+// void updateDisplay() {
+
+//   float displayValue = getAverageTemperature();
+
+//   // lcd.setViewport(0, 26, 110, 60);
+//   lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
+//   lcd.fillScreen(TVAL_FILL);
+//   lcd.setTextColor(TFT_GREEN);
+
+//   if (displayUnit == UNIT_F) {
+//     displayValue = CtoF(displayValue);
+//   }
+//   lcd.setFreeFont(&FreeSansBold18pt7b);
+//   lcd.setTextSize(2);
+//   lcd.setTextDatum(CR_DATUM);
+
+//   lcd.drawFloat(displayValue, 0, TVAL_W, 28, GFXFF);
+// }
 
 void toggleDisplayUnit() {
   displayUnit = !displayUnit;
@@ -260,11 +247,69 @@ void updateUnitDisplay() {
   } else {
     lcd.drawChar('F', 0, 17, GFXFF);
   }
-
-  updateDisplay(); // Update the displayed value for the new unit
+  // WILL MESS UP IF NOT IN TEMPERATURE DISPLAY MODE!
+  // Update the displayed value for the new unit
+  updateDisplay(getAverageTemperature());
 }
 
 /*************************** Sprites ***************************/
+
+void initSprite() {
+
+  // Create a sprite of defined size and colour depth
+  spr_fan.createSprite(SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
+  spr_fan.setColorDepth(1);
+  spr_fan.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+
+  // Push the image to the sprite - only need to do this once.
+  spr_fan.pushImage(
+      SPR_FAN_BORDER, SPR_FAN_BORDER, SPR_FAN_WIDTH - (SPR_FAN_BORDER / 2),
+      SPR_FAN_HEIGHT - (SPR_FAN_BORDER / 2), (uint16_t *)fan_icon);
+
+  // Set the TFT pivot point to the centre of the sprite
+  lcd.setPivot(SPR_FAN_X_POS + SPR_FAN_X_PIV, SPR_FAN_Y_POS + SPR_FAN_Y_PIV);
+
+  // Set Sprite pivot point to centre of Sprite
+  spr_fan.setPivot(SPR_FAN_X_PIV, SPR_FAN_Y_PIV);
+
+  lcd.setViewport(SPR_FAN_X_POS, SPR_FAN_Y_POS, SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
+  lcd.fillScreen(SPR_FAN_FILL);
+  spr_fan.pushSprite(0, 0); // Push sprite at VP origin
+}
+
+void updateFanStateDisplay(bool state) {
+  if (state) {
+    spr_fan.setBitmapColor(TFT_WHITE, TFT_BLACK);
+  } else {
+    spr_fan.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+    // spr_fan.pushRotated(0); // makes it looks odd
+  }
+}
+
+void updateFanSprite() {
+
+  if (getFanState() == false) {
+    return;
+  }
+
+  static uint16_t angle = 0;
+
+  uint32_t currentMillis = millis();  // Get snapshot of time
+  static uint32_t previousMillis = 0; // Tracks the time since last event fired
+
+  if ((uint32_t)(currentMillis - previousMillis) >= SPR_FAN_UPDATE_RATE) {
+    lcd.setViewport(SPR_FAN_X_POS, SPR_FAN_Y_POS, SPR_FAN_WIDTH,
+                    SPR_FAN_HEIGHT);
+    spr_fan.pushRotated(angle);
+
+    angle = angle + SPR_FAN_ANGLE_PER_FRAME;
+
+    if (angle > 360) {
+      angle = 0;
+    }
+    previousMillis = currentMillis;
+  }
+}
 
 /***************************** OTA *****************************/
 

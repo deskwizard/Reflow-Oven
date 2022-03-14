@@ -94,6 +94,20 @@ void reactKeys(uint8_t key, uint8_t state) {
     }
   }
 
+  if (key == 3) {
+    if (state == PRESSED) {
+      if (getDisplayMode() == DISP_MODE_TEMP) {
+        setDisplayMode(DISP_MODE_MIN);
+      } else if (getDisplayMode() == DISP_MODE_MIN) {
+        setDisplayMode(DISP_MODE_MAX);
+      } else if (getDisplayMode() == DISP_MODE_MAX) {
+        setDisplayMode(DISP_MODE_TEMP);
+      }
+      Serial.print("display mode: ");
+      Serial.println(getDisplayMode());
+    }
+  }
+
   if (key == 5) {
     Serial.print(F("Fan"));
 

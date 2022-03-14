@@ -1,8 +1,13 @@
 #include "mypid.h"
 
+
+
 float setpointHigh = 40.0;
 float outputValue = 0.0;
 float inputValue = 0.0;
+
+float minTemp = 0.0;
+float maxTemp = 0.0;
 
 uint16_t preheatDutyCycle = 127;
 uint32_t preheatTime = (2 * 60000); // minutes * (60sec * 1000ms)
@@ -32,8 +37,7 @@ QuickPID myPID(&inputValue, &outputValue, &setpointHigh, consKp, consKi,
                myPID.iAwMode::iAwCondition, /* iAwCondition, iAwClamp, iAwOff */
                myPID.Action::direct);       /* direct, reverse */
 
-float minTemp = 0.0;
-float maxTemp = 0.0;
+
 
 float getMaxTemp() { return maxTemp; }
 float getMinTemp() { return minTemp; }
@@ -166,8 +170,8 @@ void startPreheat() {
 
   // TOD: that might not be optimal, investigate later
   // Reset min/max
-  maxTemp = 0.0;
-  minTemp = 0.0;
+  maxTemp = 42.0;
+  minTemp = 36.0;
 }
 
 void startPID() {
