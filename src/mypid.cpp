@@ -39,6 +39,22 @@ float getSpan() { return MAX_DUTY_CYCLE; }
 
 float getSetpointHigh() { return setpointHigh; }
 
+void increaseSetpointHigh(uint8_t step) {
+  if (getDisplayUnit() == UNIT_C) {
+    setpointHigh = setpointHigh + step;
+  } else {
+    setpointHigh = setpointHigh + (step * 0.555555556f);
+  }
+}
+
+void decreaseSetpointHigh(uint8_t step) {
+  if (getDisplayUnit() == UNIT_C) {
+    setpointHigh = setpointHigh - step;
+  } else {
+    setpointHigh = setpointHigh - (step * 0.555555556f);
+  }
+}
+
 uint8_t getDwellTime() { return dwellTime / 60000; }
 uint8_t getPreheatTime() { return dwellTime / 60000; }
 uint8_t getPreheatDutyCycle() { return preheatDutyCycle; }

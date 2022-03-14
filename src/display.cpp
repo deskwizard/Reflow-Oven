@@ -2,7 +2,7 @@
 
 // Image to byte array https://javl.github.io/image2cpp/
 // Choose "Horizontal, 1 bit per pixel" for monochrome
-#include "sprite_fan.h"
+#include "sprites.h"
 
 TFT_eSPI lcd = TFT_eSPI();
 // Declare Sprite object "spr_fan" with pointer to "lcd" object

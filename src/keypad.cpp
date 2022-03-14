@@ -149,13 +149,14 @@ void reactKeys(uint8_t key, uint8_t state) {
 
   if (key == 11) {
     if (state == PRESSED) {
-      if (getDisplayUnit() == UNIT_C) {
-        setpointHigh = setpointHigh + adjustStep;
-      } else {
-        setpointHigh = setpointHigh + (adjustStep * 0.555555556f);
-      }
+      // if (getDisplayUnit() == UNIT_C) {
+      //   setpointHigh = setpointHigh + adjustStep;
+      // } else {
+      //   setpointHigh = setpointHigh + (adjustStep * 0.555555556f);
+      // }
+      increaseSetpointHigh(adjustStep);
       Serial.print("SPH: ");
-      Serial.println(setpointHigh);
+      Serial.println(getSetpointHigh());
       updateSetpointDisplay();
       /*
       if (displayMode == MODE_LSET) {
@@ -187,13 +188,14 @@ void reactKeys(uint8_t key, uint8_t state) {
   if (key == 12) {
     // Serial.print(F("Down"));
     if (state == PRESSED) {
-      if (getDisplayUnit() == UNIT_C) {
-        setpointHigh = setpointHigh - adjustStep;
-      } else {
-        setpointHigh = setpointHigh - (adjustStep * 0.555555556f);
-      }
+      // if (getDisplayUnit() == UNIT_C) {
+      //   setpointHigh = setpointHigh - adjustStep;
+      // } else {
+      //   setpointHigh = setpointHigh - (adjustStep * 0.555555556f);
+      // }
+      decreaseSetpointHigh(adjustStep);
       Serial.print("SPH: ");
-      Serial.println(setpointHigh);
+      Serial.println(getSetpointHigh());
       updateSetpointDisplay();
       /*
       if (displayMode == MODE_LSET) {
