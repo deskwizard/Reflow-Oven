@@ -1,7 +1,5 @@
 #include "mypid.h"
 
-
-
 float setpointHigh = 40.0;
 float outputValue = 0.0;
 float inputValue = 0.0;
@@ -14,30 +12,27 @@ uint32_t preheatTime = (2 * 60000); // minutes * (60sec * 1000ms)
 uint32_t preheatStartTime = 0;
 uint32_t dwellTime = (5 * 60000);
 uint32_t dwellStartTime = 0;
-float preheadTempTarget = 0.0;
+float preheatTempTarget = 0.0;
+uint8_t preheatPercent = 60;
 
 // Different settings depending on under/over + diff if under
-float nearKp = 0.01, nearKi = 0.01, nearKd = 0.1;
+float nearKp = 0.25, nearKi = 0.01, nearKd = 0.1;
 float aggKp = 4, aggKi = 0.2, aggKd = 1;
-// float consKp = 0.5, consKi = 0.2, consKd = 0.25;
+float Kp = 0.001, Ki = 0.01, Kd = 0.01;
 
 #define CONS_THRESHOLD 10
 uint8_t PID_threshold = CONS_THRESHOLD;
 
 // Specify the links and initial tuning parameters
-float Kp = 0.001, Ki = 0.01, Kd = 0.01;
+float consKp = 0.01, consKi = 0.01, consKd = 0.5;
 
-float consKp = 0.5, consKi = 0.1, consKd = 0.1;
-
-// QuickPID myPID(&_ewma, &outputValue, &setpointHigh, Kp, Ki, Kd, DIRECT);
-QuickPID myPID(&inputValue, &outputValue, &setpointHigh, consKp, consKi,
-               consKd,                /* OPTIONS */
-               myPID.pMode::pOnError, /* pOnError, pOnMeas, pOnErrorMeas */
-               myPID.dMode::dOnMeas,  /* dOnError, dOnMeas */
-               myPID.iAwMode::iAwCondition, /* iAwCondition, iAwClamp, iAwOff */
-               myPID.Action::direct);       /* direct, reverse */
-
-
+QuickPID myPID(&inputValue, &outputValue, &setpointHigh, consKp, consKi, consKd, myPID.Action::direct);
+// QuickPID myPID(&inputValue, &outputValue, &setpointHigh, consKp, consKi,
+//                consKd,                /* OPTIONS */
+//                myPID.pMode::pOnError, /* pOnError, pOnMeas, pOnErrorMeas */
+//                myPID.dMode::dOnMeas,  /* dOnError, dOnMeas */
+//                myPID.iAwMode::iAwCondition, /* iAwCondition, iAwClamp, iAwOff */
+//                myPID.Action::direct);       /* direct, reverse */
 
 float getMaxTemp() { return maxTemp; }
 float getMinTemp() { return minTemp; }
@@ -67,8 +62,10 @@ void decreaseSetpointHigh(uint8_t step) {
 
 uint8_t getDwellTime() { return dwellTime / 60000; }
 uint8_t getPreheatTime() { return dwellTime / 60000; }
-float getPreheatTemp() { return preheadTempTarget; }
+float getPreheatTemp() { return preheatTempTarget; }
 uint8_t getPreheatDutyCycle() { return preheatDutyCycle; }
+uint8_t getPreheatPercent() { return preheatPercent; }
+void setPreheatPercent(uint8_t percent) { preheatPercent = percent; }
 
 void setDwellTime(uint8_t minutes) {
   dwellTime = (minutes * 60000);
@@ -155,11 +152,11 @@ void setNearKd(float val) {
 
 void startPreheat() {
 
-  preheadTempTarget = setpointHigh - PREHEAT_T_OFFSET;
+  preheatTempTarget = setpointHigh * (float(preheatPercent) / 100.0);
   Serial.print("T: ");
-  Serial.println(preheadTempTarget);
+  Serial.println(preheatTempTarget);
   Serial.print("Target preheat: ");
-  Serial.println(preheadTempTarget);
+  Serial.println(preheatTempTarget);
 
   myPID.SetMode(myPID.Control::manual);
   Serial.println("Preheat started");
@@ -170,8 +167,8 @@ void startPreheat() {
 
   // TOD: that might not be optimal, investigate later
   // Reset min/max
-  maxTemp = 42.0;
-  minTemp = 36.0;
+  maxTemp = 0.0;
+  minTemp = 0.0;
 }
 
 void startPID() {
@@ -218,19 +215,27 @@ void handlePID() {
       Kd = aggKp;
       // myPID.SetTunings(aggKp, aggKi, aggKd);
       myPID.SetTunings(Kp, Ki, Kd);
-    } else if ((setpointHigh - inputValue) < float(PID_threshold)) {
+    } 
+    // else if ((setpointHigh - inputValue) < float(PID_threshold)) {
+    //   Kp = nearKp;
+    //   Ki = nearKi;
+    //   Kd = nearKd;
+    //   // myPID.SetTunings(nearKp, nearKi, nearKd);
+    //   myPID.SetTunings(Kp, Ki, Kd);
+    // } else {
+    //   Kp = consKp;
+    //   Ki = consKi;
+    //   Kd = consKd;
+    //   // myPID.SetTunings(consKp, consKi, consKd);
+    //   myPID.SetTunings(Kp, Ki, Kd);
+    // } 
+    else {
       Kp = nearKp;
       Ki = nearKi;
       Kd = nearKd;
       // myPID.SetTunings(nearKp, nearKi, nearKd);
       myPID.SetTunings(Kp, Ki, Kd);
-    } else {
-      Kp = consKp;
-      Ki = consKi;
-      Kd = consKd;
-      // myPID.SetTunings(consKp, consKi, consKd);
-      myPID.SetTunings(Kp, Ki, Kd);
-    }
+    } 
 
     if (inputValue < setpointHigh && maxTemp != 0.0) {
       minTemp = inputValue;
@@ -273,7 +278,7 @@ void handlePID() {
 
     // if (((uint32_t)(currentMillis - preheatStartTime) >= preheatTime) &&
     //     preheatStartTime != 0) {
-    if (getAverageTemperature() >= preheadTempTarget) {
+    if (getAverageTemperature() >= preheatTempTarget) {
       Serial.println("Preheat end");
       setDeviceMode(MODE_PID_DWELL);
       updateStateIndicator();

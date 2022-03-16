@@ -64,15 +64,18 @@ void loop() {
 
       case 'p':
         readValueF = Serial.parseFloat();
-        setKp(readValueF);
+        // setKp(readValueF);
+        setNearKp(readValueF);
         break;
       case 'i':
         readValueF = Serial.parseFloat();
-        setKi(readValueF);
+        // setKi(readValueF);
+        setNearKi(readValueF);
         break;
       case 'd':
         readValueF = Serial.parseFloat();
-        setKd(readValueF);
+        // setKd(readValueF);
+        setNearKd(readValueF);
         break;
 
       case 'P':
@@ -128,6 +131,16 @@ void loop() {
         Serial.println(getDwellTime());
         break;
 
+      case 'Y':
+        Serial.print("Preheat percent: ");
+        Serial.println(getPreheatPercent());
+        break;
+
+      case 'y':
+        readValueC = Serial.parseInt();
+        setPreheatPercent(readValueC);
+        break;
+
       case 'h':
         printSerialHelp();
         break;
@@ -160,14 +173,15 @@ void printSerialHelp() {
   Serial.println("  W(int)             Print dwell time");
   Serial.println("  V(int)             Print preheat time");
   Serial.println("  C(int)             Print preheat duty cycle");
+  Serial.println("  Y(int)             Print preheat percent");
   Serial.println("  w(int)             Set dwell time");
   Serial.println("  v(int)             Set preheat time");
   Serial.println("  c(int)             Set preheat duty cycle");
+  Serial.println("  y(int)             Set preheat percent");
   Serial.println();
   Serial.println("  P                  Print Kp value");
   Serial.println("  I                  Print Ki value");
   Serial.println("  D                  Print Kd value");
-  Serial.println();
   Serial.println("  p(float)           Set Kp");
   Serial.println("  i(float)           Set Ki");
   Serial.println("  d(float)           Set Kd");

@@ -29,7 +29,8 @@ void initKeypad() {
 
   delay(100);
 
-  // Cycle matrix once
+  // Cycle matrix once to initialize
+  // the allKeys variable
   getKeys();
   delay(10);
   getKeys();
