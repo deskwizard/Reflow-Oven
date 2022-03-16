@@ -1,4 +1,5 @@
 #include "control.h"
+//#include "SerialHelpers.h"
 
 uint8_t deviceMode = MODE_IDLE;
 bool fanState = false;
@@ -21,15 +22,15 @@ void initOutputs() {
 }
 
 void setBuzzer(bool state) {
-  Serial.print("buzzer: ");
-  Serial.println(state);
+  SerialPrint("buzzer: ");
+  SerialPrintln(state);
   digitalWrite(PIN_BUZZ, state);
 }
 
 void setFan(bool state) {
   fanState = state;
-  Serial.print("fan: ");
-  Serial.println(state);
+  SerialPrint("fan: ");
+  SerialPrintln(state);
   digitalWrite(PIN_FAN, fanState);
   updateFanStateDisplay(fanState);
 }

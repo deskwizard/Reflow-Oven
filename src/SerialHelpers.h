@@ -15,6 +15,8 @@ void SerialPrint(uint8_t data);
 void SerialPrintln(uint8_t data);
 void SerialPrint(uint16_t data);
 void SerialPrintln(uint16_t data);
+void SerialPrint(uint32_t data);
+void SerialPrintln(uint32_t data);
 void SerialPrint(float data);
 void SerialPrintln(float data);
 void SerialPrint(float data, uint8_t digits);

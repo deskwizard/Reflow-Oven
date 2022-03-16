@@ -60,7 +60,7 @@ void handleSensor() {
       // printTempSerial(tempC);
       // printTempSerialBT(tempC);
     } else {
-      Serial.println("Error: Could not read temperature data");
+      SerialPrintln("Error: Could not read temperature data");
       // Call e-stop here
     }
     previousMillis = currentMillis;
@@ -69,35 +69,35 @@ void handleSensor() {
 
 void printTempSerial(float tempC) {
   if (getDeviceMode() != MODE_PID_RUNNING) {
-    Serial.print(tempC);
-    Serial.print("°C  (");
-    Serial.print(CtoF(_ewma));
-    Serial.print("°F)");
+    SerialPrint(tempC);
+    SerialPrint("°C  (");
+    SerialPrint(CtoF(_ewma));
+    SerialPrint("°F)");
   }
   // if (running) {
-  //   Serial.print("  -  ");
-  //   Serial.print(getOutputValue(), 0);
-  //   Serial.print("/");
-  //   Serial.print(getSpan(), 0);
-  //   Serial.print(" (");
-  //   Serial.print((getOutputValue() / getSpan()) * 100, 0);
-  //   Serial.print("%)");
+  //   SerialPrint("  -  ");
+  //   SerialPrint(getOutputValue(), 0);
+  //   SerialPrint("/");
+  //   SerialPrint(getSpan(), 0);
+  //   SerialPrint(" (");
+  //   SerialPrint((getOutputValue() / getSpan()) * 100, 0);
+  //   SerialPrint("%)");
   // }
 
-  Serial.println();
+  SerialPrintln();
 
   // if (!tuning) {
 
-  // Serial.print("R : ");
-  //  Serial.print(tempC);
-  //  Serial.print("°C  (");
-  //  Serial.print(_ewma);
-  //  Serial.print("°C)   ");
-  //  Serial.print(CtoF(tempC));
-  //  Serial.print("°F  (");
-  //  Serial.print(CtoF(_ewma));
-  //  Serial.print("°F)   ");
-  //  Serial.println();
+  // SerialPrint("R : ");
+  //  SerialPrint(tempC);
+  //  SerialPrint("°C  (");
+  //  SerialPrint(_ewma);
+  //  SerialPrint("°C)   ");
+  //  SerialPrint(CtoF(tempC));
+  //  SerialPrint("°F  (");
+  //  SerialPrint(CtoF(_ewma));
+  //  SerialPrint("°F)   ");
+  //  SerialPrintln();
   //}
 }
 

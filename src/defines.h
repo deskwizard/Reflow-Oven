@@ -2,6 +2,7 @@
 #define _DEFINES_H_
 
 #include <Arduino.h>
+#include "SerialHelpers.h"
 
 #define BT_SERIAL_ENABLED
 // #define OTA_ENABLED

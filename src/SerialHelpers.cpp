@@ -245,6 +245,8 @@ void SerialPrint(uint8_t data) { Serial.print(data); }
 void SerialPrintln(uint8_t data) { Serial.println(data); }
 void SerialPrint(uint16_t data) { Serial.print(data); }
 void SerialPrintln(uint16_t data) { Serial.println(data); }
+void SerialPrint(uint32_t data) { Serial.print(data); }
+void SerialPrintln(uint32_t data) { Serial.println(data); }
 void SerialPrint(float data) { Serial.print(data); }
 void SerialPrintln(float data) { Serial.println(data); }
 void SerialPrint(float data, unsigned char digits) {
@@ -295,6 +297,16 @@ void SerialPrint(uint16_t data) {
 }
 
 void SerialPrintln(uint16_t data) {
+  Serial.println(data);
+  SerialBT.println(data);
+}
+
+void SerialPrint(uint32_t data) {
+  Serial.print(data);
+  SerialBT.print(data);
+}
+
+void SerialPrintln(uint32_t data) {
   Serial.println(data);
   SerialBT.println(data);
 }
