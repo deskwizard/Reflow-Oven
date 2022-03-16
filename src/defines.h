@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 #define BT_SERIAL_ENABLED
-#define OTA_ENABLED
+// #define OTA_ENABLED
 
 #ifdef BT_SERIAL_ENABLED
 #include "BluetoothSerial.h"
@@ -77,21 +77,21 @@ extern BluetoothSerial SerialBT;
 float CtoF(float celsius);
 String getSSID();
 
-void initSerial();
-void handleSerial();
-void printSerialHelp();
-void SerialPrintln();
-void SerialPrint(String data);
-void SerialPrintln(String data);
-void SerialPrint(uint8_t data);
-void SerialPrintln(uint8_t data);
-void SerialPrint(uint16_t data);
-void SerialPrintln(uint16_t data);
-void SerialPrint(float data);
-void SerialPrintln(float data);
-void SerialPrint(float data, uint8_t digits);
-void SerialPrintln(float data, uint8_t digits);
-void SerialPrint(float data, unsigned char digits);
-void SerialPrintln(float data, unsigned char digits);
+// void initSerial();
+// void handleSerial();
+// void printSerialHelp();
+// void SerialPrintln();
+// void SerialPrint(String data);
+// void SerialPrintln(String data);
+// void SerialPrint(uint8_t data);
+// void SerialPrintln(uint8_t data);
+// void SerialPrint(uint16_t data);
+// void SerialPrintln(uint16_t data);
+// void SerialPrint(float data);
+// void SerialPrintln(float data);
+// void SerialPrint(float data, uint8_t digits);
+// void SerialPrintln(float data, uint8_t digits);
+// void SerialPrint(float data, unsigned char digits);
+// void SerialPrintln(float data, unsigned char digits);
 
 #endif
