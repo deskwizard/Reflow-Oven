@@ -1,6 +1,10 @@
 #include "SerialHelpers.h"
 #include "mypid.h"
 
+#ifdef BT_SERIAL_ENABLED
+BluetoothSerial SerialBT;
+#endif
+
 void initSerial() {
   Serial.begin(115200);
   delay(2000);
@@ -14,11 +18,14 @@ void initSerial() {
 }
 
 void handleSerial() {
+
+  unsigned char c = Serial.read();
+  float readValueF;
+  uint16_t readValueC;
+
   if (Serial.available()) {
 
-    unsigned char c = Serial.read();
-    float readValueF;
-    uint16_t readValueC;
+    c = Serial.read();
 
     switch (c) {
 
@@ -119,10 +126,119 @@ void handleSerial() {
 
     } // switch
   }
+
+#ifdef BT_SERIAL_ENABLED
+
+  if (SerialBT.available()) {
+
+    c = SerialBT.read();
+
+    switch (c) {
+
+    case 'p':
+      readValueF = SerialBT.parseFloat();
+      // setKp(readValueF);
+      setNearKp(readValueF);
+      break;
+    case 'i':
+      readValueF = SerialBT.parseFloat();
+      // setKi(readValueF);
+      setNearKi(readValueF);
+      break;
+    case 'd':
+      readValueF = SerialBT.parseFloat();
+      // setKd(readValueF);
+      setNearKd(readValueF);
+      break;
+
+    case 'P':
+      SerialPrint("Kp: ");
+      SerialPrintln(getKp(), 4);
+      break;
+    case 'I':
+      SerialPrint("Ki: ");
+      SerialPrintln(getKi(), 4);
+      break;
+    case 'D':
+      SerialPrint("Kd: ");
+      SerialPrintln(getKd(), 4);
+      break;
+
+    case 'S':
+      startPID();
+      break;
+
+    case 's':
+      stopPID();
+      break;
+
+    case 'c':
+      readValueC = SerialBT.parseInt();
+      setPreheatDutyCycle(readValueC);
+      break;
+
+    case 'v':
+      readValueC = SerialBT.parseInt();
+      setPreheatTime(readValueC);
+      break;
+
+    case 'w':
+      readValueC = SerialBT.parseInt();
+      setDwellTime(readValueC);
+      break;
+
+    case 'C':
+      SerialPrint("Prehead Duty cycle: ");
+      SerialPrintln(getPreheatDutyCycle());
+      SerialPrint("/");
+      SerialPrintln(MAX_DUTY_CYCLE);
+      break;
+
+    case 'V':
+      SerialPrint("Preheat time: ");
+      SerialPrintln(getPreheatTime());
+      break;
+
+    case 'W':
+      SerialPrint("Dwell time: ");
+      SerialPrintln(getDwellTime());
+      break;
+
+    case 'Y':
+      SerialPrint("Preheat percent: ");
+      SerialPrintln(getPreheatPercent());
+      break;
+
+    case 'y':
+      readValueC = SerialBT.parseInt();
+      setPreheatPercent(readValueC);
+      break;
+
+    case 'h':
+      printSerialHelp();
+      break;
+
+    case 'f':
+      readValueC = SerialBT.parseInt();
+      if (readValueC == 20 || readValueC == 40 || readValueC == 80 ||
+          readValueC == 160) {
+        setCpuFrequencyMhz(readValueC);
+        SerialPrint("F_CPU: ");
+        SerialPrintln(readValueC);
+      } else {
+        SerialPrintln("Invalid FCPU");
+      }
+      break;
+
+    } // switch
+  }
+#endif
 }
 
 #ifndef BT_SERIAL_ENABLED
 void SerialPrintln() { Serial.println(); }
+void SerialPrint(bool data) { Serial.print(data); }
+void SerialPrintln(bool data) { Serial.println(data); }
 void SerialPrint(String data) { Serial.print(data); }
 void SerialPrintln(String data) { Serial.println(data); }
 void SerialPrint(uint8_t data) { Serial.print(data); }
@@ -141,6 +257,16 @@ void SerialPrintln(float data, unsigned char digits) {
 void SerialPrintln() {
   Serial.println();
   SerialBT.println();
+}
+
+void SerialPrint(bool data) {
+  Serial.print(data);
+  SerialBT.print(data);
+}
+
+void SerialPrintln(bool data) {
+  Serial.println(data);
+  SerialBT.println(data);
 }
 
 void SerialPrint(String data) {

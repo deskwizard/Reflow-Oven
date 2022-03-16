@@ -7,6 +7,8 @@ void initSerial();
 void handleSerial();
 void printSerialHelp();
 void SerialPrintln();
+void SerialPrint(bool data);
+void SerialPrintln(bool data);
 void SerialPrint(String data);
 void SerialPrintln(String data);
 void SerialPrint(uint8_t data);
