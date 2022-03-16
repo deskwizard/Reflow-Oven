@@ -7,9 +7,11 @@
 
 void initOTA();
 void handleOTA();
+
 void initSerial();
 void handleSerial();
 void printSerialHelp();
+
 
 #ifdef BT_SERIAL_ENABLED
 BluetoothSerial SerialBT;
@@ -20,9 +22,9 @@ void printSerialHelp();
 float CtoF(float celsius) { return (celsius * 1.8f) + 32.0f; }
 
 void setup() {
-  
+
   // setCpuFrequencyMhz(160); //  70mA
-  
+
   initSerial();
   initKeypad();
   initDisplay();
@@ -171,6 +173,15 @@ void handleSerial() {
     } // switch
   }
 }
+
+void SerialPrint(String data) { Serial.print(data); }
+void SerialPrintln(String data) { Serial.println(data); }
+void SerialPrint(uint8_t data) { Serial.print(data); }
+void SerialPrintln(uint8_t data) { Serial.println(data); }
+void SerialPrint(uint16_t data) { Serial.print(data); }
+void SerialPrintln(uint16_t data) { Serial.println(data); }
+void SerialPrint(float data) { Serial.print(data); }
+void SerialPrintln(float data) { Serial.println(data); }
 
 void printSerialHelp() {
   Serial.println("  Command            Action");

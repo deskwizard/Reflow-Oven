@@ -76,4 +76,16 @@ extern BluetoothSerial SerialBT;
 
 float CtoF(float celsius);
 String getSSID();
+
+void SerialPrint(String data);
+void SerialPrintln(String data);
+void SerialPrint(uint8_t data);
+void SerialPrintln(uint8_t data);
+void SerialPrint(uint16_t data);
+void SerialPrintln(uint16_t data);
+void SerialPrint(float data);
+void SerialPrintln(float data);
+void SerialPrint(float data, uint8_t digits);
+void SerialPrintln(float data, uint8_t digits);
+
 #endif
