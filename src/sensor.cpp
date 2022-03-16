@@ -101,19 +101,19 @@ void printTempSerial(float tempC) {
   //}
 }
 
-void printTempSerialBT(float tempC) {
-#ifdef BT_SERIAL_ENABLED
-  if (!tuning) {
-    SerialBT.print("R : ");
-    SerialBT.print(tempC);
-    SerialBT.print("°C  (");
-    SerialBT.print(_ewma);
-    SerialBT.print("°C)   ");
-    SerialBT.print(CtoF(tempC));
-    SerialBT.print("°F  (");
-    SerialBT.print(CtoF(_ewma));
-    SerialBT.print("°F)   ");
-    SerialBT.println();
-  }
-#endif
-}
+// void printTempSerialBT(float tempC) {
+// #ifdef BT_SERIAL_ENABLED
+//   if (!tuning) {
+//     SerialBT.print("R : ");
+//     SerialBT.print(tempC);
+//     SerialBT.print("°C  (");
+//     SerialBT.print(_ewma);
+//     SerialBT.print("°C)   ");
+//     SerialBT.print(CtoF(tempC));
+//     SerialBT.print("°F  (");
+//     SerialBT.print(CtoF(_ewma));
+//     SerialBT.print("°F)   ");
+//     SerialBT.println();
+//   }
+// #endif
+// }

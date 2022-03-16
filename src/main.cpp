@@ -166,6 +166,8 @@ void handleSerial() {
     } // switch
   }
 }
+
+#ifndef BT_SERIAL_ENABLED
 void SerialPrintln() { Serial.println(); }
 void SerialPrint(String data) { Serial.print(data); }
 void SerialPrintln(String data) { Serial.println(data); }
@@ -181,6 +183,62 @@ void SerialPrint(float data, unsigned char digits) {
 void SerialPrintln(float data, unsigned char digits) {
   Serial.println(data, digits);
 }
+#else
+void SerialPrintln() {
+  Serial.println();
+  SerialBT.println();
+}
+
+void SerialPrint(String data) {
+  Serial.print(data);
+  SerialBT.print(data);
+}
+
+void SerialPrintln(String data) {
+  Serial.println(data);
+  SerialBT.println(data);
+}
+
+void SerialPrint(uint8_t data) {
+  Serial.print(data);
+  SerialBT.print(data);
+}
+
+void SerialPrintln(uint8_t data) {
+  Serial.println(data);
+  SerialBT.println(data);
+}
+
+void SerialPrint(uint16_t data) {
+  Serial.print(data);
+  SerialBT.print(data);
+}
+
+void SerialPrintln(uint16_t data) {
+  Serial.println(data);
+  SerialBT.println(data);
+}
+
+void SerialPrint(float data) {
+  Serial.print(data);
+  SerialBT.print(data);
+}
+
+void SerialPrintln(float data) {
+  Serial.println(data);
+  SerialBT.println(data);
+}
+
+void SerialPrint(float data, unsigned char digits) {
+  Serial.print(data, digits);
+  SerialBT.print(data);
+}
+
+void SerialPrintln(float data, unsigned char digits) {
+  Serial.println(data, digits);
+  SerialBT.println(data, digits);
+}
+#endif
 
 void printSerialHelp() {
   SerialPrintln("  Command            Action");
