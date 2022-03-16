@@ -8,16 +8,9 @@
 void initOTA();
 void handleOTA();
 
-void initSerial();
-void handleSerial();
-void printSerialHelp();
-
-
 #ifdef BT_SERIAL_ENABLED
 BluetoothSerial SerialBT;
 #endif
-
-void printSerialHelp();
 
 float CtoF(float celsius) { return (celsius * 1.8f) + 32.0f; }
 
@@ -57,8 +50,8 @@ void loop() {
 void initSerial() {
   Serial.begin(115200);
   delay(2000);
-  Serial.println("Hello");
-  Serial.println();
+  SerialPrintln("Hello");
+  SerialPrintln();
 #ifdef BT_SERIAL_ENABLED
   SerialBT.begin("Reflow Oven"); // Bluetooth device name
   SerialBT.println("Hello");
@@ -92,16 +85,16 @@ void handleSerial() {
       break;
 
     case 'P':
-      Serial.print("Kp: ");
-      Serial.println(getKp(), 4);
+      SerialPrint("Kp: ");
+      SerialPrintln(getKp(), 4);
       break;
     case 'I':
-      Serial.print("Ki: ");
-      Serial.println(getKi(), 4);
+      SerialPrint("Ki: ");
+      SerialPrintln(getKi(), 4);
       break;
     case 'D':
-      Serial.print("Kd: ");
-      Serial.println(getKd(), 4);
+      SerialPrint("Kd: ");
+      SerialPrintln(getKd(), 4);
       break;
 
     case 'S':
@@ -128,25 +121,25 @@ void handleSerial() {
       break;
 
     case 'C':
-      Serial.print("Prehead Duty cycle: ");
-      Serial.println(getPreheatDutyCycle());
-      Serial.print("/");
-      Serial.println(MAX_DUTY_CYCLE);
+      SerialPrint("Prehead Duty cycle: ");
+      SerialPrintln(getPreheatDutyCycle());
+      SerialPrint("/");
+      SerialPrintln(MAX_DUTY_CYCLE);
       break;
 
     case 'V':
-      Serial.print("Preheat time: ");
-      Serial.println(getPreheatTime());
+      SerialPrint("Preheat time: ");
+      SerialPrintln(getPreheatTime());
       break;
 
     case 'W':
-      Serial.print("Dwell time: ");
-      Serial.println(getDwellTime());
+      SerialPrint("Dwell time: ");
+      SerialPrintln(getDwellTime());
       break;
 
     case 'Y':
-      Serial.print("Preheat percent: ");
-      Serial.println(getPreheatPercent());
+      SerialPrint("Preheat percent: ");
+      SerialPrintln(getPreheatPercent());
       break;
 
     case 'y':
@@ -163,17 +156,17 @@ void handleSerial() {
       if (readValueC == 20 || readValueC == 40 || readValueC == 80 ||
           readValueC == 160) {
         setCpuFrequencyMhz(readValueC);
-        Serial.print("F_CPU: ");
-        Serial.println(readValueC);
+        SerialPrint("F_CPU: ");
+        SerialPrintln(readValueC);
       } else {
-        Serial.println("Invalid FCPU");
+        SerialPrintln("Invalid FCPU");
       }
       break;
 
     } // switch
   }
 }
-
+void SerialPrintln() { Serial.println(); }
 void SerialPrint(String data) { Serial.print(data); }
 void SerialPrintln(String data) { Serial.println(data); }
 void SerialPrint(uint8_t data) { Serial.print(data); }
@@ -182,30 +175,36 @@ void SerialPrint(uint16_t data) { Serial.print(data); }
 void SerialPrintln(uint16_t data) { Serial.println(data); }
 void SerialPrint(float data) { Serial.print(data); }
 void SerialPrintln(float data) { Serial.println(data); }
+void SerialPrint(float data, unsigned char digits) {
+  Serial.print(data, digits);
+}
+void SerialPrintln(float data, unsigned char digits) {
+  Serial.println(data, digits);
+}
 
 void printSerialHelp() {
-  Serial.println("  Command            Action");
-  Serial.println("-------------------------------------------------------");
-  Serial.println("  S                  Start PID");
-  Serial.println("  s                  Stop PID");
-  Serial.println();
-  Serial.println("  W(int)             Print dwell time");
-  Serial.println("  V(int)             Print preheat time");
-  Serial.println("  C(int)             Print preheat duty cycle");
-  Serial.println("  Y(int)             Print preheat percent");
-  Serial.println("  w(int)             Set dwell time");
-  Serial.println("  v(int)             Set preheat time");
-  Serial.println("  c(int)             Set preheat duty cycle");
-  Serial.println("  y(int)             Set preheat percent");
-  Serial.println();
-  Serial.println("  P                  Print Kp value");
-  Serial.println("  I                  Print Ki value");
-  Serial.println("  D                  Print Kd value");
-  Serial.println("  p(float)           Set Kp");
-  Serial.println("  i(float)           Set Ki");
-  Serial.println("  d(float)           Set Kd");
-  Serial.println();
-  Serial.println("  f(20/40/80/160)    Change CPU Frequency to value");
-  Serial.println("-------------------------------------------------------");
-  Serial.println();
+  SerialPrintln("  Command            Action");
+  SerialPrintln("-------------------------------------------------------");
+  SerialPrintln("  S                  Start PID");
+  SerialPrintln("  s                  Stop PID");
+  SerialPrintln();
+  SerialPrintln("  W(int)             Print dwell time");
+  SerialPrintln("  V(int)             Print preheat time");
+  SerialPrintln("  C(int)             Print preheat duty cycle");
+  SerialPrintln("  Y(int)             Print preheat percent");
+  SerialPrintln("  w(int)             Set dwell time");
+  SerialPrintln("  v(int)             Set preheat time");
+  SerialPrintln("  c(int)             Set preheat duty cycle");
+  SerialPrintln("  y(int)             Set preheat percent");
+  SerialPrintln();
+  SerialPrintln("  P                  Print Kp value");
+  SerialPrintln("  I                  Print Ki value");
+  SerialPrintln("  D                  Print Kd value");
+  SerialPrintln("  p(float)           Set Kp");
+  SerialPrintln("  i(float)           Set Ki");
+  SerialPrintln("  d(float)           Set Kd");
+  SerialPrintln();
+  SerialPrintln("  f(20/40/80/160)    Change CPU Frequency to value");
+  SerialPrintln("-------------------------------------------------------");
+  SerialPrintln();
 }
