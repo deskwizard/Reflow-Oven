@@ -35,15 +35,15 @@ void initKeypad() {
   delay(10);
   getKeys();
 
-  // SerialPrint("K: ");
-  // SerialPrintln(allKeys);
+  // Serial.print("K: ");
+  // Serial.println(allKeys);
 
   if (allKeys == 8) {
     // Key 3 help down
     // Set OTA mode, start OTA, etc...
     setDeviceMode(MODE_OTA);
-    SerialPrint("OTA key detected");
-    SerialPrintln(allKeys);
+    Serial.print("OTA key detected");
+    Serial.println(allKeys);
   } else {
     initTimer();
   }
@@ -52,22 +52,22 @@ void initKeypad() {
 void handleKeypad() {
 
   if (lastKeys != allKeys) {
-    // SerialPrint("Key ");
+    // Serial.print("Key ");
 
     for (uint8_t x = 1; x <= 14; x++) { // Start at 1, we don't have a key 0
       if (bitRead(lastKeys, x) != bitRead(allKeys, x)) {
-        // SerialPrint(x);
-        //  SerialPrint(": ");
-        //   SerialPrint(bitRead(allKeys, x));
+        // Serial.print(x);
+        //  Serial.print(": ");
+        //   Serial.print(bitRead(allKeys, x));
         reactKeys(x, bitRead(allKeys, x));
         // if (bitRead(allKeys, x) == 1) {
-        //   SerialPrint(" - Pressed");
+        //   Serial.print(" - Pressed");
         // } else {
-        //   SerialPrint(" - Released");
+        //   Serial.print(" - Released");
         // }
       }
     }
-    SerialPrintln();
+    Serial.println();
 
     lastKeys = allKeys;
   }
@@ -104,13 +104,13 @@ void reactKeys(uint8_t key, uint8_t state) {
       } else if (getDisplayMode() == DISP_MODE_MAX) {
         setDisplayMode(DISP_MODE_TEMP);
       }
-      SerialPrint("display mode: ");
-      SerialPrintln(getDisplayMode());
+      Serial.print("display mode: ");
+      Serial.println(getDisplayMode());
     }
   }
 
   if (key == 5) {
-    SerialPrint(F("Fan"));
+    Serial.print(F("Fan"));
 
     if (state == PRESSED) {
       toggleFan();
@@ -118,7 +118,7 @@ void reactKeys(uint8_t key, uint8_t state) {
   }
 
   // if (key == 6) {
-  //   // SerialPrint(F("begel"));
+  //   // Serial.print(F("begel"));
   //   if (state == PRESSED) {
   //     // Next digit adjust
   //     if (adjustStep == 100) {
@@ -130,7 +130,7 @@ void reactKeys(uint8_t key, uint8_t state) {
   // }
 
   if (key == 7) {
-    // SerialPrint(F("begel"));
+    // Serial.print(F("begel"));
     if (state == PRESSED) {
       toggleDisplayUnit();
     }
@@ -138,22 +138,22 @@ void reactKeys(uint8_t key, uint8_t state) {
 
   if (key == 8) {
     if (state == PRESSED) {
-      SerialPrint(F("HOTA: "));
+      Serial.print(F("HOTA: "));
       hotAState = !hotAState;
-      SerialPrintln(hotAState);
+      Serial.println(hotAState);
       digitalWrite(PIN_HOTA, hotAState);
     }
   }
   if (key == 9) {
     if (state == PRESSED) {
-      SerialPrint(F("HOTB: "));
+      Serial.print(F("HOTB: "));
       hotBState = !hotBState;
-      SerialPrintln(hotBState);
+      Serial.println(hotBState);
       digitalWrite(PIN_HOTB, hotBState);
     }
   }
   if (key == 10) {
-    SerialPrint(F("Degel"));
+    Serial.print(F("Degel"));
 
     if (state == PRESSED) {
       setBuzzer(HIGH);
@@ -170,8 +170,8 @@ void reactKeys(uint8_t key, uint8_t state) {
       //   setpointHigh = setpointHigh + (adjustStep * 0.555555556f);
       // }
       increaseSetpointHigh(adjustStep);
-      SerialPrint("SPH: ");
-      SerialPrintln(getSetpointHigh());
+      Serial.print("SPH: ");
+      Serial.println(getSetpointHigh());
       updateSetpointDisplay();
       /*
       if (displayMode == MODE_LSET) {
@@ -180,8 +180,8 @@ void reactKeys(uint8_t key, uint8_t state) {
         } else {
           setpointLow = setpointLow + (adjustStep * 0.555555556f);
         }
-        SerialPrint("LSET: ");
-        SerialPrintln(setpointLow);
+        Serial.print("LSET: ");
+        Serial.println(setpointLow);
         // setLowAlarm(setpointLow);
         // //updateDisplay();
       } else if (displayMode == MODE_HSET) {
@@ -191,8 +191,8 @@ void reactKeys(uint8_t key, uint8_t state) {
           setpointHigh = setpointHigh + (adjustStep * 0.555555556f);
         }
         // setHighAlarm(setpointHigh);
-        SerialPrint("HSET: ");
-        SerialPrintln(setpointHigh);
+        Serial.print("HSET: ");
+        Serial.println(setpointHigh);
         // //updateDisplay();
       }
       //updateDisplay();
@@ -201,7 +201,7 @@ void reactKeys(uint8_t key, uint8_t state) {
   }
 
   if (key == 12) {
-    // SerialPrint(F("Down"));
+    // Serial.print(F("Down"));
     if (state == PRESSED) {
       // if (getDisplayUnit() == UNIT_C) {
       //   setpointHigh = setpointHigh - adjustStep;
@@ -209,8 +209,8 @@ void reactKeys(uint8_t key, uint8_t state) {
       //   setpointHigh = setpointHigh - (adjustStep * 0.555555556f);
       // }
       decreaseSetpointHigh(adjustStep);
-      SerialPrint("SPH: ");
-      SerialPrintln(getSetpointHigh());
+      Serial.print("SPH: ");
+      Serial.println(getSetpointHigh());
       updateSetpointDisplay();
       /*
       if (displayMode == MODE_LSET) {
@@ -219,8 +219,8 @@ void reactKeys(uint8_t key, uint8_t state) {
         } else {
           setpointLow = setpointLow - (adjustStep * 0.555555556f);
         }
-        SerialPrint("LSET: ");
-        SerialPrintln(setpointLow);
+        Serial.print("LSET: ");
+        Serial.println(setpointLow);
         // setLowAlarm(setpointLow);
         // //updateDisplay();
       } else if (displayMode == MODE_HSET) {
@@ -230,8 +230,8 @@ void reactKeys(uint8_t key, uint8_t state) {
           setpointHigh = setpointHigh - (adjustStep * 0.555555556f);
         }
         // setHighAlarm(setpointHigh);
-        SerialPrint("HSET: ");
-        SerialPrintln(setpointHigh);
+        Serial.print("HSET: ");
+        Serial.println(setpointHigh);
         // //updateDisplay();
       }
       // updateDisplay();
@@ -241,7 +241,7 @@ void reactKeys(uint8_t key, uint8_t state) {
   }
 
   if (key == 14) {
-    SerialPrint(F("Start/Stop"));
+    Serial.print(F("Start/Stop"));
     if (state == PRESSED) {
       /*
             if (displayMode == MODE_RUN) {
@@ -263,14 +263,14 @@ void reactKeys(uint8_t key, uint8_t state) {
             // setDisplayMode();
 
             // updateDisplay();
-            SerialPrint(F("Mode change to: "));
-            SerialPrintln(displayMode);
+            Serial.print(F("Mode change to: "));
+            Serial.println(displayMode);
 
             */
     }
   }
 
-  SerialPrintln();
+  Serial.println();
 }
 
 void getKeys() {
@@ -284,8 +284,8 @@ void getKeys() {
     for (uint8_t x = 0; x < ROWS_COUNT; x++) {
       pinRead = digitalRead(rowPins[x]);
       bitWrite(allKeys, x, pinRead);
-      // SerialPrint(pinRead);
-      // SerialPrint(" ");
+      // Serial.print(pinRead);
+      // Serial.print(" ");
     }
     pinMode(PIN_COL0, INPUT);
   } else {
@@ -294,8 +294,8 @@ void getKeys() {
     for (uint8_t x = 0; x < ROWS_COUNT; x++) {
       pinRead = digitalRead(rowPins[x]);
       bitWrite(allKeys, x + 7, pinRead);
-      // SerialPrint(pinRead);
-      // SerialPrint(" ");
+      // Serial.print(pinRead);
+      // Serial.print(" ");
     }
     pinMode(PIN_COL1, INPUT);
   }
@@ -305,15 +305,16 @@ void getKeys() {
 void printKeyDebug(uint8_t key, uint8_t state) {
 
   // Serial debug for keys
-  SerialPrint("Key ");
-  SerialPrint(key);
+  Serial.print("Key ");
+  Serial.print(key);
 
   if (state == PRESSED) {
-    SerialPrintln(" was Pressed");
+    Serial.println(" was Pressed");
   } else if (state == RELEASED) {
-    SerialPrintln(" was Released");
+    Serial.println(" was Released");
   } else {
-    SerialPrintln("Woops, something went wrong");
+    Serial.println("Woops, something went wrong");
+    //Serial.println("Woops, something went wrong");
   }
 }
 

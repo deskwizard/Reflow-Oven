@@ -2,9 +2,9 @@
 #define _DEFINES_H_
 
 #include <Arduino.h>
-#include "SerialHelpers.h"
+//#include "SerialHelpers.h"
 
-#define BT_SERIAL_ENABLED
+//#define BT_SERIAL_ENABLED
 // #define OTA_ENABLED
 
 #ifdef BT_SERIAL_ENABLED
@@ -43,10 +43,10 @@ extern BluetoothSerial SerialBT;
 // These need to be together since they're
 // over the control module cable.
 // TODO: Doublecheck HOTA/HOTB pins
-#define PIN_FAN 16
-#define PIN_HOTA 2
-#define PIN_HOTB 4
-#define PIN_BUZZ 15
+#define PIN_FAN 15
+#define PIN_HOTA 4
+#define PIN_HOTB 2
+#define PIN_BUZZ 16
 
 /********************** Keypad **********************/
 
@@ -56,15 +56,15 @@ extern BluetoothSerial SerialBT;
 #define ROWS_COUNT 7
 #define COLS_COUNT 2
 
-#define PIN_COL0 27
-#define PIN_COL1 26
+#define PIN_COL0 12
+#define PIN_COL1 27
 #define PIN_ROW0 34
 #define PIN_ROW1 35
 #define PIN_ROW2 33
 #define PIN_ROW3 32
 #define PIN_ROW4 25
 #define PIN_ROW5 14
-#define PIN_ROW6 12
+#define PIN_ROW6 26
 
 /**************** runmodes ***********************/
 // #define RUNMODE_IDLE 0

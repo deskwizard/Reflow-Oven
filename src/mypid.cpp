@@ -69,97 +69,97 @@ void setPreheatPercent(uint8_t percent) { preheatPercent = percent; }
 
 void setDwellTime(uint8_t minutes) {
   dwellTime = (minutes * 60000);
-  SerialPrint("Dwell time: ");
-  SerialPrintln(dwellTime / 60000);
+  Serial.print("Dwell time: ");
+  Serial.println(dwellTime / 60000);
 }
 
 void setPreheatTime(uint8_t minutes) {
   preheatTime = (minutes * 60000);
-  SerialPrint("Preheat time: ");
-  SerialPrintln(preheatTime / 60000);
+  Serial.print("Preheat time: ");
+  Serial.println(preheatTime / 60000);
 }
 
 void setPreheatDutyCycle(uint16_t dutyCycle) {
   preheatDutyCycle = dutyCycle;
-  SerialPrint("Prehead Duty cycle: ");
-  SerialPrint(preheatDutyCycle);
-  SerialPrint("/");
-  SerialPrintln(MAX_DUTY_CYCLE);
+  Serial.print("Prehead Duty cycle: ");
+  Serial.print(preheatDutyCycle);
+  Serial.print("/");
+  Serial.println(MAX_DUTY_CYCLE);
 }
 
 void setThreshold(uint8_t threshold) {
   PID_threshold = threshold;
-  SerialPrint("Cons Threshold: ");
-  SerialPrintln(PID_threshold);
+  Serial.print("Cons Threshold: ");
+  Serial.println(PID_threshold);
 }
 
 void setKp(float val) {
   Kp = val;
   myPID.SetTunings(Kp, Ki, Kd);
-  SerialPrint("Kp changed to: ");
-  SerialPrintln(Kp, 4);
+  Serial.print("Kp changed to: ");
+  Serial.println(Kp, 4);
 }
 
 void setKi(float val) {
   Ki = val;
   myPID.SetTunings(Kp, Ki, Kd);
-  SerialPrint("Ki changed to: ");
-  SerialPrintln(Ki, 4);
+  Serial.print("Ki changed to: ");
+  Serial.println(Ki, 4);
 }
 
 void setKd(float val) {
   Kd = val;
   myPID.SetTunings(Kp, Ki, Kd);
-  SerialPrint("Kd changed to: ");
-  SerialPrintln(Kd, 4);
+  Serial.print("Kd changed to: ");
+  Serial.println(Kd, 4);
 }
 
 void setConsKp(float val) {
   consKp = val;
-  SerialPrint("Kp cons changed to: ");
-  SerialPrintln(consKp, 4);
+  Serial.print("Kp cons changed to: ");
+  Serial.println(consKp, 4);
 }
 
 void setConsKi(float val) {
   consKi = val;
-  SerialPrint("Ki cons changed to: ");
-  SerialPrintln(consKi, 4);
+  Serial.print("Ki cons changed to: ");
+  Serial.println(consKi, 4);
 }
 
 void setConsKd(float val) {
   consKd = val;
-  SerialPrint("Kd cons changed to: ");
-  SerialPrintln(consKd, 4);
+  Serial.print("Kd cons changed to: ");
+  Serial.println(consKd, 4);
 }
 
 void setNearKp(float val) {
   nearKp = val;
-  SerialPrint("Kp near changed to: ");
-  SerialPrintln(nearKp, 4);
+  Serial.print("Kp near changed to: ");
+  Serial.println(nearKp, 4);
 }
 
 void setNearKi(float val) {
   nearKi = val;
-  SerialPrint("Ki near changed to: ");
-  SerialPrintln(nearKi, 4);
+  Serial.print("Ki near changed to: ");
+  Serial.println(nearKi, 4);
 }
 
 void setNearKd(float val) {
   nearKd = val;
-  SerialPrint("Kd near changed to: ");
-  SerialPrintln(nearKd, 4);
+  Serial.print("Kd near changed to: ");
+  Serial.println(nearKd, 4);
 }
 
 void startPreheat() {
 
   preheatTempTarget = setpointHigh * (float(preheatPercent) / 100.0);
-  SerialPrint("T: ");
-  SerialPrintln(preheatTempTarget);
-  SerialPrint("Target preheat: ");
-  SerialPrintln(preheatTempTarget);
+  Serial.print("T: ");
+  Serial.println(preheatTempTarget);
+  Serial.print("Target preheat: ");
+  Serial.println(preheatTempTarget);
 
   myPID.SetMode(myPID.Control::manual);
-  SerialPrintln("Preheat started");
+  Serial.println("Preheat started");
   setDeviceMode(MODE_PID_PREHEAT);
   preheatStartTime = millis();
   outputValue = preheatDutyCycle;
@@ -172,13 +172,13 @@ void startPreheat() {
 }
 
 void startPID() {
-  SerialPrintln("PID Start");
+  Serial.println("PID Start");
   startPreheat();
   updateStateIndicator();
 }
 
 void stopPID() {
-  SerialPrintln("PID Stop");
+  Serial.println("PID Stop");
   myPID.SetMode(myPID.Control::manual);
   setDeviceMode(MODE_IDLE);
   outputValue = 0;
@@ -248,27 +248,27 @@ void handlePID() {
 
     if ((uint32_t)(currentMillis - previousMillis) >= 2000) {
 
-      SerialPrint(inputValue);
-      SerialPrint("°C  (");
-      SerialPrint(CtoF(inputValue));
-      SerialPrint("°F)");
+      Serial.print(inputValue);
+      Serial.print("°C  (");
+      Serial.print(CtoF(inputValue));
+      Serial.print("°F)");
 
-      SerialPrint("  -  ");
-      SerialPrint(getOutputValue(), 0);
-      SerialPrint("/");
-      SerialPrint(getSpan(), 0);
-      SerialPrint(" (");
-      SerialPrint((getOutputValue() / getSpan()) * 100, 0);
-      SerialPrint("%)");
-      // SerialPrintln();
+      Serial.print("  -  ");
+      Serial.print(getOutputValue(), 0);
+      Serial.print("/");
+      Serial.print(getSpan(), 0);
+      Serial.print(" (");
+      Serial.print((getOutputValue() / getSpan()) * 100, 0);
+      Serial.print("%)");
+      // Serial.println();
 
-      SerialPrint("   Kp: ");
-      SerialPrint(myPID.GetKp());
-      SerialPrint("  Ki: ");
-      SerialPrint(myPID.GetKi());
-      SerialPrint("  Kd: ");
-      SerialPrintln(myPID.GetKd());
-      SerialPrintln();
+      Serial.print("   Kp: ");
+      Serial.print(myPID.GetKp());
+      Serial.print("  Ki: ");
+      Serial.print(myPID.GetKi());
+      Serial.print("  Kd: ");
+      Serial.println(myPID.GetKd());
+      Serial.println();
 
       previousMillis = currentMillis;
     }
@@ -279,7 +279,7 @@ void handlePID() {
     // if (((uint32_t)(currentMillis - preheatStartTime) >= preheatTime) &&
     //     preheatStartTime != 0) {
     if (getAverageTemperature() >= preheatTempTarget) {
-      SerialPrintln("Preheat end");
+      Serial.println("Preheat end");
       setDeviceMode(MODE_PID_DWELL);
       updateStateIndicator();
       updatePIDValues();
@@ -291,7 +291,7 @@ void handlePID() {
 
     // if (((uint32_t)(currentMillis - preheatStartTime) >= preheatTime) &&
     //     preheatStartTime != 0) {
-    //   SerialPrintln("Preheat end");
+    //   Serial.println("Preheat end");
     //   setDeviceMode(MODE_PID_DWELL);
     //   updateStateIndicator();
     //   updatePIDValues();
@@ -305,7 +305,7 @@ void handlePID() {
   else if (getDeviceMode() == MODE_PID_DWELL) {
     if (((uint32_t)(currentMillis - dwellStartTime) >= dwellTime) &&
         dwellStartTime != 0) {
-      SerialPrintln("Dwell end");
+      Serial.println("Dwell end");
       setDeviceMode(MODE_PID_RUNNING);
       updateStateIndicator();
       myPID.SetMode(myPID.Control::automatic);

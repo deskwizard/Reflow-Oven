@@ -32,26 +32,26 @@ void setDisplayMode(uint8_t mode) {
   } else if (displayMode == DISP_MODE_MIN) {
     lcd.drawString("Min", 20, 12, GFXFF);
     updateDisplay(getMinTemp());
-    // SerialPrint("disp update min: ");
-    // SerialPrintln(getMinTemp());
+    // Serial.print("disp update min: ");
+    // Serial.println(getMinTemp());
   } else if (displayMode == DISP_MODE_MAX) {
     lcd.drawString("Max", 20, 12, GFXFF);
     updateDisplay(getMaxTemp());
-    // SerialPrint("disp update max: ");
-    // SerialPrintln(getMaxTemp());
+    // Serial.print("disp update max: ");
+    // Serial.println(getMaxTemp());
   }
   // else if (displayMode == DISP_MODE_SPADJ) {
   //   lcd.drawString("SP", 20, 12, GFXFF);
   //   updateDisplay(getSetpointHigh());
-  //   // SerialPrint("disp update sp: ");
-  //   // SerialPrintln(getSetpointHigh());
+  //   // Serial.print("disp update sp: ");
+  //   // Serial.println(getSetpointHigh());
   // }
 }
 
 void initDisplay() {
 
   lcd.init();
-  lcd.setRotation(2);
+  //lcd.setRotation(2);
   lcd.fillScreen(TFT_BLACK);
   /******************************************************/
 
@@ -185,8 +185,8 @@ void updateSetpointDisplay() {
 }
 
 void updateDisplay(float displayValue) {
-  // SerialPrint("Update disp: ");
-  // SerialPrintln(displayValue);
+  // Serial.print("Update disp: ");
+  // Serial.println(displayValue);
 
   lcd.setViewport(0, TVAL_Y, TVAL_W, TVAL_H);
   lcd.fillScreen(TVAL_FILL);
@@ -204,8 +204,8 @@ void updateDisplay(float displayValue) {
 
 void toggleDisplayUnit() {
   displayUnit = !displayUnit;
-  SerialPrint("Unit: ");
-  SerialPrintln(displayUnit);
+  Serial.print("Unit: ");
+  Serial.println(displayUnit);
   updateUnitDisplay();
   updateSetpointDisplay();
 }

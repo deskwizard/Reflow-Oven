@@ -22,15 +22,15 @@ void initOutputs() {
 }
 
 void setBuzzer(bool state) {
-  SerialPrint("buzzer: ");
-  SerialPrintln(state);
+  Serial.print("buzzer: ");
+  Serial.println(state);
   digitalWrite(PIN_BUZZ, state);
 }
 
 void setFan(bool state) {
   fanState = state;
-  SerialPrint("fan: ");
-  SerialPrintln(state);
+  Serial.print("fan: ");
+  Serial.println(state);
   digitalWrite(PIN_FAN, fanState);
   updateFanStateDisplay(fanState);
 }
