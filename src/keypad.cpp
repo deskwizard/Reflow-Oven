@@ -83,7 +83,8 @@ void reactKeys(uint8_t key, uint8_t state) {
   static bool hotAState = false;
   static bool hotBState = false;
 
-  if (key == 1) {
+  // Temporary
+  if (key == KEY_START) {
     if (state == PRESSED) {
 
       if (getDeviceMode() == MODE_IDLE) {
@@ -109,7 +110,7 @@ void reactKeys(uint8_t key, uint8_t state) {
     }
   }
 
-  if (key == 5) {
+  if (key == KEY_FAN) {
     Serial.print(F("Fan"));
 
     if (state == PRESSED) {
@@ -129,7 +130,7 @@ void reactKeys(uint8_t key, uint8_t state) {
   //   }
   // }
 
-  if (key == 7) {
+  if (key == KEY_UNIT) {
     // Serial.print(F("begel"));
     if (state == PRESSED) {
       toggleDisplayUnit();
@@ -162,7 +163,7 @@ void reactKeys(uint8_t key, uint8_t state) {
     }
   }
 
-  if (key == 11) {
+  if (key == KEY_UP) {
     if (state == PRESSED) {
       // if (getDisplayUnit() == UNIT_C) {
       //   setpointHigh = setpointHigh + adjustStep;
@@ -200,7 +201,7 @@ void reactKeys(uint8_t key, uint8_t state) {
     }
   }
 
-  if (key == 12) {
+  if (key == KEY_DOWN) {
     // Serial.print(F("Down"));
     if (state == PRESSED) {
       // if (getDisplayUnit() == UNIT_C) {
@@ -314,7 +315,7 @@ void printKeyDebug(uint8_t key, uint8_t state) {
     Serial.println(" was Released");
   } else {
     Serial.println("Woops, something went wrong");
-    //Serial.println("Woops, something went wrong");
+    // Serial.println("Woops, something went wrong");
   }
 }
 

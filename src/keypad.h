@@ -9,6 +9,12 @@
 #define PRESSED 1
 #define RELEASED 0
 
+#define KEY_START 13
+#define KEY_UNIT 7
+#define KEY_FAN 6
+#define KEY_UP 11
+#define KEY_DOWN 12
+
 // "Public"
 void initKeypad();
 void handleKeypad();
