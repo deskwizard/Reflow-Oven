@@ -22,13 +22,13 @@ void initOTA() {
   displayOTASetup();
 
   // Start wifi for OTA
-  SerialPrintln("Starting Wifi...");
+  Serial.println("Starting Wifi...");
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
     //displayOTAFail();
     ;
-    SerialPrintln("Connection Failed! Rebooting...");
+    Serial.println("Connection Failed! Rebooting...");
     delay(5000);
     ESP.restart();
   }
@@ -52,48 +52,48 @@ void initOTA() {
 
         // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS
         // using SPIFFS.end()
-        SerialPrintln("Start updating " + type);
+        Serial.println("Start updating " + type);
 
         displayOTAStarting(type);
       })
       .onEnd([]() {
-        SerialPrintln("\nEnd");
+        Serial.println("\nEnd");
         displayOTADone();
         delay(2000);
       })
       .onProgress([](unsigned int progress, unsigned int total) {
         esp_task_wdt_reset();
 
-        // SerialPrintf("Progress: %u%%\r", (progress / (total / 100)));
-        SerialPrint("Progress: ");
+        // Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+        Serial.print("Progress: ");
 
         uint8_t actual_progress = progress / (total / 100);
-        SerialPrintln(actual_progress);
+        Serial.println(actual_progress);
 
         // show progress on lcd
         displayOTAProgress(actual_progress);
       })
       .onError([](ota_error_t error) {
-        SerialPrintf("Error[%u]: ", error);
+        Serial.printf("Error[%u]: ", error);
         if (error == OTA_AUTH_ERROR)
-          SerialPrintln("Auth Failed");
+          Serial.println("Auth Failed");
         else if (error == OTA_BEGIN_ERROR)
-          SerialPrintln("Begin Failed");
+          Serial.println("Begin Failed");
         else if (error == OTA_CONNECT_ERROR)
-          SerialPrintln("Connect Failed");
+          Serial.println("Connect Failed");
         else if (error == OTA_RECEIVE_ERROR)
-          SerialPrintln("Receive Failed");
+          Serial.println("Receive Failed");
         else if (error == OTA_END_ERROR)
-          SerialPrintln("End Failed");
+          Serial.println("End Failed");
       });
 
   ArduinoOTA.begin();
 
   //displayOTASuccess(WiFi.localIP().toString());
 
-  SerialPrint("OTA Ready at IP address: ");
+  Serial.print("OTA Ready at IP address: ");
   
-  SerialPrintln(WiFi.localIP());
+  Serial.println(WiFi.localIP());
   displayOTAIP(WiFi.localIP().toString());
 
   delay(5000);
