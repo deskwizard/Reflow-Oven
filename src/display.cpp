@@ -7,6 +7,7 @@
 TFT_eSPI lcd = TFT_eSPI();
 // Declare Sprite object "spr_fan" with pointer to "lcd" object
 TFT_eSprite spr_fan = TFT_eSprite(&lcd);
+TFT_eSprite spr_hota = TFT_eSprite(&lcd);
 
 uint8_t displayMode = DISP_MODE_TEMP; // Default to temperature
 bool displayUnit = UNIT_C;
@@ -51,7 +52,7 @@ void setDisplayMode(uint8_t mode) {
 void initDisplay() {
 
   lcd.init();
-  //lcd.setRotation(2);
+  // lcd.setRotation(2);
   lcd.fillScreen(TFT_BLACK);
   /******************************************************/
 
@@ -76,11 +77,17 @@ void initDisplay() {
 
     initSprite();
 
+    //while (1);
+
     updateUnitDisplay();
     updateSetpointDisplay();
+    
     updatePowerIndicator();
     updateStateIndicator();
+    
+    //while (1);
     setDisplayMode(DISP_MODE_TEMP);
+
   }
 }
 
@@ -167,6 +174,7 @@ void handleDisplay() {
   }
 
   updateFanSprite();
+  updateHeatersSprites();
 }
 
 void updateSetpointDisplay() {
@@ -249,6 +257,7 @@ void updateUnitDisplay() {
 
 void initSprite() {
 
+  /************************* Fan Sprite **************************/
   // Create a sprite of defined size and colour depth
   spr_fan.createSprite(SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
   spr_fan.setColorDepth(1);
@@ -268,6 +277,22 @@ void initSprite() {
   lcd.setViewport(SPR_FAN_X_POS, SPR_FAN_Y_POS, SPR_FAN_WIDTH, SPR_FAN_HEIGHT);
   lcd.fillScreen(SPR_FAN_FILL);
   spr_fan.pushSprite(0, 0); // Push sprite at VP origin
+
+  /************************* Heater A Sprite **************************/
+  // Create a sprite of defined size and colour depth
+  spr_hota.createSprite(SPR_HOTA_WIDTH, SPR_HOTA_HEIGHT);
+  spr_hota.setColorDepth(1);
+  spr_hota.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+
+  // Push the image to the sprite - only need to do this once.
+  spr_hota.pushImage(0, 0, SPR_HOTA_WIDTH, SPR_HOTA_HEIGHT,
+                     (uint16_t *)heater_icon);
+
+  lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOTA_WIDTH,
+                  SPR_HOTA_HEIGHT);
+  lcd.fillScreen(TFT_PURPLE);
+  // lcd.fillScreen(SPR_HOTA_FILL);
+  spr_hota.pushSprite(0, 0); // Push sprite at VP origin
 }
 
 void updateFanStateDisplay(bool state) {
@@ -275,6 +300,7 @@ void updateFanStateDisplay(bool state) {
     spr_fan.setBitmapColor(TFT_WHITE, TFT_BLACK);
   } else {
     spr_fan.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+    spr_fan.pushSprite(0, 0); // Push sprite at VP origin
     // spr_fan.pushRotated(0); // makes it looks odd
   }
 }
@@ -300,6 +326,26 @@ void updateFanSprite() {
     if (angle > 360) {
       angle = 0;
     }
+    previousMillis = currentMillis;
+  }
+}
+
+void updateHeatersSprites() {
+
+  // if (getFanState() == false) {
+  //   return;
+  // }
+
+
+  uint32_t currentMillis = millis();  // Get snapshot of time
+  static uint32_t previousMillis = 0; // Tracks the time since last event fired
+
+  if ((uint32_t)(currentMillis - previousMillis) >= SPR_HOTA_UPDATE_RATE) {
+  lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOTA_WIDTH,
+                  SPR_HOTA_HEIGHT);
+
+    spr_hota.pushSprite(0, 0); // Push sprite at VP origin
+
     previousMillis = currentMillis;
   }
 }

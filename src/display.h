@@ -76,10 +76,30 @@ void setDisplayMode(uint8_t mode);
 
 #define SPR_FAN_BORDER 2 // 2 = 1 pixel on each side, even number obviously
 
+// Pivot points for animation
 // Offset image by half the border size so it's centered
 #define SPR_FAN_X_PIV (SPR_FAN_WIDTH / 2) + (SPR_FAN_BORDER / 2)
 #define SPR_FAN_Y_PIV (SPR_FAN_HEIGHT / 2) + (SPR_FAN_BORDER / 2)
 
+
+// Width and height of the heater A sprite
+#define SPR_HOTA_WIDTH 17
+#define SPR_HOTA_HEIGHT 23
+
+#define SPR_HOTA_UPDATE_RATE 100
+#define SPR_HOTA_STEP_PER_FRAME 10
+
+// These are the heater A sprite VP positions
+#define SPR_HOTA_X_POS 60
+#define SPR_HOTA_Y_POS 0
+/*
+#define SPR_FAN_BORDER 2 // 2 = 1 pixel on each side, even number obviously
+
+// Pivot points for animation
+// Offset image by half the border size so it's centered
+#define SPR_FAN_X_PIV (SPR_FAN_WIDTH / 2) + (SPR_FAN_BORDER / 2)
+#define SPR_FAN_Y_PIV (SPR_FAN_HEIGHT / 2) + (SPR_FAN_BORDER / 2)
+*/
 /*********************************************************************************/
 
 void initDisplay();
@@ -111,4 +131,7 @@ bool getDisplayUnit();
 void initSprite();
 void updateFanStateDisplay(bool state);
 void updateFanSprite();
+
+void updateHeatersSprites();
+
 #endif
