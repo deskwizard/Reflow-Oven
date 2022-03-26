@@ -8,6 +8,7 @@ TFT_eSPI lcd = TFT_eSPI();
 // Declare Sprite object "spr_fan" with pointer to "lcd" object
 TFT_eSprite spr_fan = TFT_eSprite(&lcd);
 TFT_eSprite spr_hota = TFT_eSprite(&lcd);
+TFT_eSprite spr_hotb = TFT_eSprite(&lcd);
 
 uint8_t displayMode = DISP_MODE_TEMP; // Default to temperature
 bool displayUnit = UNIT_C;
@@ -77,17 +78,16 @@ void initDisplay() {
 
     initSprite();
 
-    //while (1);
+    // while (1);
 
     updateUnitDisplay();
     updateSetpointDisplay();
-    
+
     updatePowerIndicator();
     updateStateIndicator();
-    
-    //while (1);
-    setDisplayMode(DISP_MODE_TEMP);
 
+    // while (1);
+    setDisplayMode(DISP_MODE_TEMP);
   }
 }
 
@@ -280,19 +280,33 @@ void initSprite() {
 
   /************************* Heater A Sprite **************************/
   // Create a sprite of defined size and colour depth
-  spr_hota.createSprite(SPR_HOTA_WIDTH, SPR_HOTA_HEIGHT);
+  spr_hota.createSprite(SPR_HOT_WIDTH, SPR_HOT_HEIGHT);
   spr_hota.setColorDepth(1);
   spr_hota.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
 
   // Push the image to the sprite - only need to do this once.
-  spr_hota.pushImage(0, 0, SPR_HOTA_WIDTH, SPR_HOTA_HEIGHT,
-                     (uint16_t *)heater_icon);
+  spr_hota.pushImage(0, 0, SPR_HOT_WIDTH, SPR_HOT_HEIGHT,
+                     (uint16_t *)heater_icon_bottom);
 
-  lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOTA_WIDTH,
-                  SPR_HOTA_HEIGHT);
-  lcd.fillScreen(TFT_PURPLE);
+  lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOT_WIDTH,
+                  SPR_HOT_HEIGHT);
   // lcd.fillScreen(SPR_HOTA_FILL);
   spr_hota.pushSprite(0, 0); // Push sprite at VP origin
+
+  /************************* Heater B Sprite **************************/
+  // Create a sprite of defined size and colour depth
+  spr_hotb.createSprite(SPR_HOT_WIDTH, SPR_HOT_HEIGHT);
+  spr_hotb.setColorDepth(1);
+  spr_hotb.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+
+  // Push the image to the sprite - only need to do this once.
+  spr_hotb.pushImage(0, 0, SPR_HOT_WIDTH, SPR_HOT_HEIGHT,
+                     (uint16_t *)heater_icon_top);
+
+  lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOT_WIDTH,
+                  SPR_HOT_HEIGHT);
+  // lcd.fillScreen(SPR_HOTA_FILL);
+  spr_hotb.pushSprite(0, 0); // Push sprite at VP origin
 }
 
 void updateFanStateDisplay(bool state) {
@@ -332,19 +346,20 @@ void updateFanSprite() {
 
 void updateHeatersSprites() {
 
-  // if (getFanState() == false) {
-  //   return;
-  // }
-
-
   uint32_t currentMillis = millis();  // Get snapshot of time
   static uint32_t previousMillis = 0; // Tracks the time since last event fired
 
-  if ((uint32_t)(currentMillis - previousMillis) >= SPR_HOTA_UPDATE_RATE) {
-  lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOTA_WIDTH,
-                  SPR_HOTA_HEIGHT);
+  if ((uint32_t)(currentMillis - previousMillis) >= SPR_HOT_UPDATE_RATE) {
 
+    // Heater A
+    lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOT_WIDTH,
+                    SPR_HOT_HEIGHT);
     spr_hota.pushSprite(0, 0); // Push sprite at VP origin
+
+        // Heater A
+    lcd.setViewport(SPR_HOTB_X_POS, SPR_HOTB_Y_POS, SPR_HOT_WIDTH,
+                    SPR_HOT_HEIGHT);
+    spr_hotb.pushSprite(0, 0); // Push sprite at VP origin
 
     previousMillis = currentMillis;
   }
