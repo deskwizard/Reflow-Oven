@@ -4,11 +4,17 @@
 uint8_t deviceMode = MODE_IDLE;
 bool fanState = false;
 
+uint8_t selectedHeaters = HEATER_BOTTOM;
+
 bool getFanState() { return fanState; }
 
 uint8_t getDeviceMode() { return deviceMode; }
 
-void setDeviceMode(uint8_t mode) { deviceMode = mode; }
+void setDeviceMode(uint8_t mode) {
+  deviceMode = mode;
+  Serial.print("mode: ");
+  Serial.println(mode);
+}
 
 void initOutputs() {
 
@@ -21,13 +27,13 @@ void initOutputs() {
   pinMode(PIN_FAN, OUTPUT);
 }
 
-void setBuzzer(bool state) {
+void setBuzzerState(bool state) {
   Serial.print("buzzer: ");
   Serial.println(state);
   digitalWrite(PIN_BUZZ, state);
 }
 
-void setFan(bool state) {
+void setFanState(bool state) {
   fanState = state;
   Serial.print("fan: ");
   Serial.println(state);
@@ -35,7 +41,42 @@ void setFan(bool state) {
   updateFanStateDisplay(fanState);
 }
 
-void toggleFan() {
+void toggleFanState() {
   fanState = !fanState;
-  setFan(fanState);
+  setFanState(fanState);
+}
+
+uint8_t getHeatersSelection() {
+  return selectedHeaters;
+}
+
+void setHeatersState(bool state) {
+
+  if (state) {
+
+    if (selectedHeaters == HEATER_BOTTOM || selectedHeaters == HEATER_BOTH) {
+      digitalWrite(PIN_HOTA, HIGH);
+    }
+    
+    if (selectedHeaters == HEATER_TOP || selectedHeaters == HEATER_BOTH) {
+      digitalWrite(PIN_HOTB, HIGH);
+    }
+
+  } else {
+    digitalWrite(PIN_HOTA, LOW);
+    digitalWrite(PIN_HOTB, LOW);
+  }
+
+}
+
+// Toggles the heaters: bottom -> top -> both
+void selectHeaters() {
+
+  if (selectedHeaters == HEATER_BOTH) {
+    selectedHeaters = HEATER_BOTTOM;
+  } else {
+    selectedHeaters++;
+  }
+  Serial.print("heater select: ");
+  Serial.println(selectedHeaters);
 }

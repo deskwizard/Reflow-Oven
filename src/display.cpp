@@ -163,18 +163,30 @@ void handleDisplay() {
   uint32_t currentMillis = millis();  // Get snapshot of time
   static uint32_t previousMillis = 0; // Tracks the time since last event fired
 
-  if (((uint32_t)(currentMillis - previousMillis) >= displayReadRate) &&
-      displayMode == DISP_MODE_TEMP) {
-    updateDisplay(getAverageTemperature());
-    updatePowerIndicator();
-    if (getDeviceMode() == MODE_PID_RUNNING) {
-      updatePIDValues();
-    }
-    previousMillis = currentMillis;
-  }
+  // if (((uint32_t)(currentMillis - previousMillis) >= displayReadRate) &&
+  //     displayMode == DISP_MODE_TEMP) {
+  //   updateDisplay(getAverageTemperature());
+  //   updatePowerIndicator();
+  //   if (getDeviceMode() == MODE_PID_RUNNING) {
+  //     updatePIDValues();
+  //   }
+  //   previousMillis = currentMillis;
+  // }
 
-  updateFanSprite();
-  updateHeatersSprites();
+  if (displayMode == DISP_MODE_TEMP) {
+
+    if (((uint32_t)(currentMillis - previousMillis) >= displayReadRate)) {
+      updateDisplay(getAverageTemperature());
+      updatePowerIndicator();
+      if (getDeviceMode() == MODE_PID_RUNNING) {
+        updatePIDValues();
+      }
+      previousMillis = currentMillis;
+    }
+
+    updateFanSprite();
+    updateHeatersSprites();
+  }
 }
 
 void updateSetpointDisplay() {
@@ -344,6 +356,7 @@ void updateFanSprite() {
   }
 }
 
+
 void updateHeatersSprites() {
 
   uint32_t currentMillis = millis();  // Get snapshot of time
@@ -356,7 +369,7 @@ void updateHeatersSprites() {
                     SPR_HOT_HEIGHT);
     spr_hota.pushSprite(0, 0); // Push sprite at VP origin
 
-        // Heater A
+    // Heater B
     lcd.setViewport(SPR_HOTB_X_POS, SPR_HOTB_Y_POS, SPR_HOT_WIDTH,
                     SPR_HOT_HEIGHT);
     spr_hotb.pushSprite(0, 0); // Push sprite at VP origin

@@ -1,8 +1,6 @@
 * = WIP / Partial implementation
 
 
-setpointHigh extern in keypad.cpp
-
 Todo list (mandatory):
     -   Figure out why the serial PID setting doesn't work
         but works in the PID loop.
@@ -28,9 +26,6 @@ Todo list (might as well):
     -   Smooth fonts
 
     -   Icons (fan, little heating waves, etc...)
-
-    -   Re-wire & replace the buzzer on the control board for
-        a 12V model instead of 5V 
 
 
 Optional ideas:

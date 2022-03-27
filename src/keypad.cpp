@@ -79,10 +79,6 @@ void reactKeys(uint8_t key, uint8_t state) {
 
   // return; // for debug.
 
-  // These don't belong here.
-  static bool hotAState = false;
-  static bool hotBState = false;
-
   // Temporary
   if (key == KEY_START) {
     if (state == PRESSED) {
@@ -91,7 +87,6 @@ void reactKeys(uint8_t key, uint8_t state) {
         startPID();
       } else {
         stopPID();
-        setDeviceMode(MODE_IDLE);
       }
     }
   }
@@ -114,7 +109,7 @@ void reactKeys(uint8_t key, uint8_t state) {
     Serial.print(F("Fan"));
 
     if (state == PRESSED) {
-      toggleFan();
+      toggleFanState();
     }
   }
 
@@ -139,27 +134,29 @@ void reactKeys(uint8_t key, uint8_t state) {
 
   if (key == 8) {
     if (state == PRESSED) {
-      Serial.print(F("HOTA: "));
-      hotAState = !hotAState;
-      Serial.println(hotAState);
-      digitalWrite(PIN_HOTA, hotAState);
+      // Serial.print(F("HOTA: "));
+      // hotAState = !hotAState;
+      // Serial.println(hotAState);
+      // digitalWrite(PIN_HOTA, hotAState);
+      //toggleSelectHotA();
+      selectHeaters();
     }
   }
   if (key == 9) {
     if (state == PRESSED) {
-      Serial.print(F("HOTB: "));
-      hotBState = !hotBState;
-      Serial.println(hotBState);
-      digitalWrite(PIN_HOTB, hotBState);
+      // Serial.print(F("HOTB: "));
+      // hotBState = !hotBState;
+      // Serial.println(hotBState);
+      // digitalWrite(PIN_HOTB, hotBState);
     }
   }
   if (key == 10) {
     Serial.print(F("Degel"));
 
     if (state == PRESSED) {
-      setBuzzer(HIGH);
+      setBuzzerState(HIGH);
     } else if (state == RELEASED) {
-      setBuzzer(LOW);
+      setBuzzerState(LOW);
     }
   }
 

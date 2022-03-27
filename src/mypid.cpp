@@ -1,6 +1,6 @@
 #include "mypid.h"
 
-float setpointHigh = 40.0;
+float setpointHigh = 60.0;
 float outputValue = 0.0;
 float inputValue = 0.0;
 
@@ -165,7 +165,7 @@ void startPreheat() {
   outputValue = preheatDutyCycle;
   ledcWrite(PWMChannel, outputValue);
 
-  // TOD: that might not be optimal, investigate later
+  // TODO: that might not be optimal, investigate later
   // Reset min/max
   maxTemp = 0.0;
   minTemp = 0.0;
@@ -173,6 +173,7 @@ void startPreheat() {
 
 void startPID() {
   Serial.println("PID Start");
+  setHeatersState(ON);
   startPreheat();
   updateStateIndicator();
 }
@@ -182,8 +183,11 @@ void stopPID() {
   myPID.SetMode(myPID.Control::manual);
   setDeviceMode(MODE_IDLE);
   outputValue = 0;
+
   // Make sure we turn stuff off
+  setHeatersState(OFF);
   ledcWrite(PWMChannel, outputValue);
+  
   updateStateIndicator();
   updatePowerIndicator();
 }
