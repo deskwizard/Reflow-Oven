@@ -315,10 +315,12 @@ void initSprite() {
   spr_hotb.pushImage(0, 0, SPR_HOT_WIDTH, SPR_HOT_HEIGHT,
                      (uint16_t *)heater_icon_top);
 
-  lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOT_WIDTH,
+  lcd.setViewport(SPR_HOTB_X_POS, SPR_HOTB_Y_POS, SPR_HOT_WIDTH,
                   SPR_HOT_HEIGHT);
   // lcd.fillScreen(SPR_HOTA_FILL);
   spr_hotb.pushSprite(0, 0); // Push sprite at VP origin
+
+  updateHeatersSpritesColor();
 }
 
 void updateFanStateDisplay(bool state) {
@@ -356,8 +358,36 @@ void updateFanSprite() {
   }
 }
 
+void updateHeatersSpritesColor() {
+
+  uint8_t heaters = getHeatersSelection();
+  Serial.print("sel: ");
+  Serial.println(heaters);
+
+  if (heaters == HEATER_BOTTOM || heaters == HEATER_BOTH) {
+    spr_hota.setBitmapColor(TFT_WHITE, TFT_BLACK);
+  } else {
+    spr_hota.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+  }
+
+  lcd.setViewport(SPR_HOTA_X_POS, SPR_HOTA_Y_POS, SPR_HOT_WIDTH,
+                  SPR_HOT_HEIGHT);
+  spr_hota.pushSprite(0, 0);
+
+  if (heaters == HEATER_TOP || heaters == HEATER_BOTH) {
+    spr_hotb.setBitmapColor(TFT_WHITE, TFT_BLACK);
+  } else {
+    spr_hotb.setBitmapColor(TFT_DARKGREY, TFT_BLACK);
+  }
+
+  lcd.setViewport(SPR_HOTB_X_POS, SPR_HOTB_Y_POS, SPR_HOT_WIDTH,
+                  SPR_HOT_HEIGHT);
+  spr_hotb.pushSprite(0, 0);
+}
 
 void updateHeatersSprites() {
+
+  return;
 
   uint32_t currentMillis = millis();  // Get snapshot of time
   static uint32_t previousMillis = 0; // Tracks the time since last event fired

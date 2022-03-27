@@ -130,6 +130,7 @@ void initSprite();
 void updateFanStateDisplay(bool state);
 void updateFanSprite();
 
+void updateHeatersSpritesColor();
 void updateHeatersSprites();
 
 #endif

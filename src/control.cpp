@@ -46,9 +46,7 @@ void toggleFanState() {
   setFanState(fanState);
 }
 
-uint8_t getHeatersSelection() {
-  return selectedHeaters;
-}
+uint8_t getHeatersSelection() { return selectedHeaters; }
 
 void setHeatersState(bool state) {
 
@@ -57,7 +55,7 @@ void setHeatersState(bool state) {
     if (selectedHeaters == HEATER_BOTTOM || selectedHeaters == HEATER_BOTH) {
       digitalWrite(PIN_HOTA, HIGH);
     }
-    
+
     if (selectedHeaters == HEATER_TOP || selectedHeaters == HEATER_BOTH) {
       digitalWrite(PIN_HOTB, HIGH);
     }
@@ -66,7 +64,6 @@ void setHeatersState(bool state) {
     digitalWrite(PIN_HOTA, LOW);
     digitalWrite(PIN_HOTB, LOW);
   }
-
 }
 
 // Toggles the heaters: bottom -> top -> both
@@ -77,6 +74,9 @@ void selectHeaters() {
   } else {
     selectedHeaters++;
   }
+
+  updateHeatersSpritesColor();
+
   Serial.print("heater select: ");
   Serial.println(selectedHeaters);
 }
