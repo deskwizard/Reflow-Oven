@@ -4,7 +4,7 @@
 uint8_t deviceMode = MODE_IDLE;
 bool fanState = false;
 
-uint8_t selectedHeaters = HEATER_BOTTOM;
+uint8_t selectedHeaters = HEATER_TOP;
 
 bool getFanState() { return fanState; }
 
@@ -51,6 +51,8 @@ uint8_t getHeatersSelection() { return selectedHeaters; }
 void setHeatersState(bool state) {
 
   if (state) {
+
+    setFanState(ON);
 
     if (selectedHeaters == HEATER_BOTTOM || selectedHeaters == HEATER_BOTH) {
       digitalWrite(PIN_HOTA, HIGH);

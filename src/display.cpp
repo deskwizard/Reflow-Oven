@@ -31,6 +31,8 @@ void setDisplayMode(uint8_t mode) {
 
   if (displayMode == DISP_MODE_TEMP) {
     // will update automatically in handleDisplay();
+    updateHeatersSpritesColor(); // re-draw the heaters sprites
+    updateFanStateDisplay(getFanState());
   } else if (displayMode == DISP_MODE_MIN) {
     lcd.drawString("Min", 20, 12, GFXFF);
     updateDisplay(getMinTemp());
@@ -88,6 +90,7 @@ void initDisplay() {
 
     // while (1);
     setDisplayMode(DISP_MODE_TEMP);
+    updateHeatersSpritesColor();
   }
 }
 
@@ -184,9 +187,9 @@ void handleDisplay() {
       previousMillis = currentMillis;
     }
 
-    updateFanSprite();
     updateHeatersSprites();
   }
+  updateFanSprite();
 }
 
 void updateSetpointDisplay() {

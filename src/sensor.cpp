@@ -57,7 +57,7 @@ void handleSensor() {
     if (tempC != MAX6675_INVALID) {
       // Apply the EWMA formula
       _ewma = (_ewmaAlpha * tempC) + (1.0 - _ewmaAlpha) * _ewma;
-      // printTempSerial(tempC);
+      //printTempSerial(tempC);
       // printTempSerialBT(tempC);
     } else {
       Serial.println("Error: Could not read temperature data");
